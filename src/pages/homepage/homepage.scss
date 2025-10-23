@@ -1,4 +1,31 @@
 .homepage-container {
   display: flex;
   justify-content: space-between;
+  padding: 0 10vw;
+
+  &__left {
+    align-content: center;
+
+    &__welcome {
+      font-size: 24px;
+    }
+
+    &__title {
+      font-size: 56px;
+      color: #2cbfae;
+      font-weight: bold;
+    }
+
+    &__actions {
+      margin-top: 40px;
+    }
+  }
+
+  &__right {
+    align-content: center;
+
+    img {
+      height: 60vh;
+    }
+  }
 }
