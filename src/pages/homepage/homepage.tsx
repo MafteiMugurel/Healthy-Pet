@@ -18,7 +18,7 @@ const Homepage = () => {
         </div>
       </div>
       <div className="homepage-container__right">
-        <img src={imageRight} />
+        <img src={imageRight} alt="" />
       </div>
     </div>
   );
