@@ -1,5 +1,5 @@
 import "./homepage.scss";
-import imageRight from "./../../assets/homepage-img.png";
+import imageRight from "./../../assets/Homepage.png";
 
 const Homepage = () => {
   return (
