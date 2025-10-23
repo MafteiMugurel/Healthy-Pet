@@ -4,6 +4,7 @@ import Homepage from "./pages/homepage/homepage";
 import AddAnimal from "./pages/add-animal/add-animal";
 import Dashboard from "./pages/dashboard/dashboard";
 
+
 function App() {
   return (
     <BrowserRouter>
