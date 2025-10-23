@@ -1,16 +1,18 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.scss";
-//import Button from "@mui/material/Button";
 import Homepage from "./pages/homepage/homepage";
+import AddAnimal from "./pages/add-animal/add-animal";
 import Dashboard from "./pages/dashboard/dashboard";
-import Addanimal from "./pages/addanimal/addanimal";
 
 function App() {
   return (
-    <div className="App">
-      <Homepage />
-      <Dashboard />
-      <Addanimal /> 
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Homepage />}></Route>
+        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/add-animal" element={<AddAnimal />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
