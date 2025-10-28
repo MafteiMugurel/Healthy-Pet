@@ -1,35 +1,51 @@
+import { Button } from "@mui/material";
+import "./add-animal.scss";
 const AddAnimal = () => {
   return (
-    <div className="Add-Animal-container">
-      <div className="title">HealthyPet</div>
-      <div className="subtitle">Add new animal form</div>
-      <div className="description">
+    <div className="Add-Animal-Container">
+      <div className="Add-Animal-Container__title">HealthyPet</div>
+      <div className="Add-Animal-Container__subtitle">Add new animal form</div>
+      <div className="Add-Animal-Container__description">
         What type of animal it is? Select one of the options
       </div>
-      <div className="animal-select">
+      <div className="Add-Animal-Container__animal-select">
         <div>
-          <button>Cat</button>
+          <Button variant="contained">
+            <img src="./../../assets/cat.png" alt="cat" />
+          </Button>
         </div>
         <div>
-          <button>Dog</button>
+          <Button variant="contained">
+            <img src="./../../assets/dog.png" alt="dog" />
+          </Button>
         </div>
         <div>
-          <button>Bird</button>
+          <Button variant="contained">
+            <img src="./../../assets/bird.png" alt="bird" />
+          </Button>
         </div>
         <div>
-          <button>Rabbit</button>
+          <Button variant="contained">
+            <img src="./../../assets/rabbit.png" alt="rabbit" />
+          </Button>
         </div>
         <div>
-          <button>Reptile</button>
+          <Button variant="contained">
+            <img src="./../../assets/Reptile.png" alt="reptile" />
+          </Button>
         </div>
         <div>
-          <button>Turtle</button>
+          <Button variant="contained">
+            <img src="./../../assets/Turtle.png" alt="turtle" />
+          </Button>
         </div>
         <div>
-          <button>Other</button>
+          <Button variant="contained">
+            <img src="" alt="other" />
+          </Button>
         </div>
       </div>
-      <form className="animal-form">
+      <form className="Add-Animal-Container__animal-form">
         <div>
           <label>Animal name *</label>
           <input type="text" required></input>
@@ -67,9 +83,9 @@ const AddAnimal = () => {
           <input type="text"></input>
         </div>
       </form>
-      <div className="buttons">
-        <button>ADD MEDICAL RECORDS</button>
-        <button>SAVE AND EXIT</button>
+      <div className="Add-Animal-Container__buttons">
+        <Button>ADD MEDICAL RECORDS</Button>
+        <Button>SAVE AND EXIT</Button>
       </div>
     </div>
   );
