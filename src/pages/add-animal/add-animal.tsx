@@ -2,6 +2,11 @@ import { Button } from "@mui/material";
 import "./add-animal.scss";
 
 import TurtleIcon from "../../assets/Turtle.png";
+import CatIcon from "../../assets/cat.png";
+import DogIcon from "../../assets/Dog.png";
+import RabbitIcon from "../../assets/Rabbit.png";
+import ReptileIcon from "../../assets/Reptile.png";
+import BirdIcon from "../../assets/Bird.png";
 
 const AddAnimal = () => {
   return (
@@ -14,32 +19,32 @@ const AddAnimal = () => {
       <div className="Add-Animal-Container__animal-select">
         <div>
           <Button variant="contained">
-            <img src="./../../assets/cat.png" alt="cat" />
+            <img src={CatIcon} alt="cat" />
           </Button>
         </div>
         <div>
           <Button variant="contained">
-            <img src={TurtleIcon} alt="dog" />
+            <img src={DogIcon} alt="dog" />
           </Button>
         </div>
         <div>
           <Button variant="contained">
-            <img src="./../../assets/bird.png" alt="bird" />
+            <img src={BirdIcon} alt="bird" />
           </Button>
         </div>
         <div>
           <Button variant="contained">
-            <img src="./../../assets/rabbit.png" alt="rabbit" />
+            <img src={RabbitIcon} alt="rabbit" />
           </Button>
         </div>
         <div>
           <Button variant="contained">
-            <img src="./../../assets/Reptile.png" alt="reptile" />
+            <img src={ReptileIcon} alt="reptile" />
           </Button>
         </div>
         <div>
           <Button variant="contained">
-            <img src="../../assets/Turtle.png" alt="turtle" />
+            <img src={TurtleIcon} alt="turtle" />
           </Button>
         </div>
         <div>
