@@ -1,5 +1,7 @@
 import { Button } from "@mui/material";
 import "./add-animal.scss";
+import TurtleIcon from "../../assets/Turtle.png";
+
 const AddAnimal = () => {
   return (
     <div className="Add-Animal-Container">
@@ -16,7 +18,7 @@ const AddAnimal = () => {
         </div>
         <div>
           <Button variant="contained">
-            <img src="./../../assets/dog.png" alt="dog" />
+            <img src={TurtleIcon} alt="dog" />
           </Button>
         </div>
         <div>
@@ -36,7 +38,7 @@ const AddAnimal = () => {
         </div>
         <div>
           <Button variant="contained">
-            <img src="./../../assets/Turtle.png" alt="turtle" />
+            <img src="../../assets/Turtle.png" alt="turtle" />
           </Button>
         </div>
         <div>
