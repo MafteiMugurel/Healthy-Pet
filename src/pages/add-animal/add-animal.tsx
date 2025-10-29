@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import "./add-animal.scss";
+
 const AddAnimal = () => {
   return (
     <div className="Add-Animal-Container">
