@@ -13,7 +13,7 @@ const Card = () => {
           alt="PlusIcon"
           className="card-container__header__image"
         />
-        <p>Name your pet</p>
+        Name your pet
       </div>
 
       <div className="card-container__info">

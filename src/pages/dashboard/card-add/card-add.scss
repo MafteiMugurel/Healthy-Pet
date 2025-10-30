@@ -1,4 +1,4 @@
-.card-container {
+.card-add-container {
   width: 22vh;
   height: 36vh;
   background-color: white;
@@ -18,6 +18,7 @@
     align-items: center;
     text-align: center;
     margin: 2vh 0;
+
     img {
       width: auto;
       height: 4vh;
@@ -27,27 +28,9 @@
     }
   }
 
-  &__info {
-    display: flex;
-    flex: 0 1 35%;
-    flex-direction: column;
-    justify-content: space-evenly;
-
-    &__item {
-      display: flex;
-
-      align-items: center;
-
-      img {
-        width: 24px;
-        height: auto;
-        padding-right: 16px;
-      }
-    }
-  }
   &__actions {
     display: flex;
     flex: 0 1 10%;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
 }
