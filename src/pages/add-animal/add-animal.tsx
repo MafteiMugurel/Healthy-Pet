@@ -1,4 +1,11 @@
-import { Button } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import "./add-animal.scss";
 
 import turtleIcon from "../../assets/turtle.svg";
@@ -8,123 +15,61 @@ import rabbitIcon from "../../assets/rabbit.svg";
 import reptileIcon from "../../assets/reptile.svg";
 import birdIcon from "../../assets/bird.svg";
 import otherIcon from "../../assets/other.svg";
+import { useState } from "react";
 
 const AddAnimal = () => {
+  let gender;
+  const animalTypes = [
+    { id: "cat", label: "Cat", icon: catIcon },
+    { id: "dog", label: "Dog", icon: dogIcon },
+    { id: "bird", label: "Bird", icon: birdIcon },
+    { id: "rabbit", label: "Rabbit", icon: rabbitIcon },
+    { id: "reptile", label: "Reptile", icon: reptileIcon },
+    { id: "turtle", label: "Turtle", icon: turtleIcon },
+    { id: "other", label: "Other", icon: otherIcon },
+  ];
+  const [selectedAnimal, setSelectedAnimal] = useState({} as any);
+
   return (
     <div className="add-animal-container">
-      <div className="Add-Animal-Container__title">Add new animal</div>
-      <div className="Add-Animal-Container__description">
+      <div className="add-animal-container__title">Add new animal</div>
+      <div className="add-animal-container__description">
         What type of animal it is? Select one of the options
       </div>
-      <div className="Add-Animal-Container__animal-select">
-        <div className="container">
-          <div className="radio-tile-group">
-            <div className="input-container">
-              <input
-                id="cat"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon cat-Icon">
-                  <img src={catIcon} alt="cat icon" />
-                </div>
-                <label className="radio-tile-label">Cat</label>
-              </div>
-            </div>
-
-            <div className="input-container">
-              <input
-                id="dog"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon dog-Icon">
-                  <img src={dogIcon} alt="dog icon" />
-                </div>
-                <label className="radio-tile-label">Dog</label>
-              </div>
-            </div>
-
-            <div className="input-container">
-              <input
-                id="bird"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon bird-Icon">
-                  <img src={birdIcon} alt="bird icon" />
-                </div>
-                <label className="radio-tile-label">Bird</label>
-              </div>
-            </div>
-
-            <div className="input-container">
-              <input
-                id="rabbit"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon rabbit-Icon">
-                  <img src={rabbitIcon} alt="rabbit icon" />
-                </div>
-                <label className="radio-tile-label">Rabbit</label>
-              </div>
-            </div>
-            <div className="input-container">
-              <input
-                id="reptile"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon reptile-Icon">
-                  <img src={reptileIcon} alt="reptile icon" />
-                </div>
-                <label className="radio-tile-label">Reptile</label>
-              </div>
-            </div>
-            <div className="input-container">
-              <input
-                id="rabbit"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon turtle-Icon">
-                  <img src={turtleIcon} alt="turtle icon" />
-                </div>
-                <label className="radio-tile-label">Turtle</label>
-              </div>
-            </div>
-            <div className="input-container">
-              <input
-                id="rabbit"
-                className="radio-button"
-                type="radio"
-                name="radio"
-              />
-              <div className="radio-tile">
-                <div className="icon other-Icon">
-                  <img src={otherIcon} alt="other icon" />
-                </div>
-                <label className="radio-tile-label">Other</label>
-              </div>
-            </div>
+      <div className="add-animal-container__animal-select">
+        {animalTypes.map((animal) => (
+          <div
+            key={animal.id}
+            className={
+              "animal-option" +
+              (selectedAnimal.id === animal.id
+                ? " animal-option__selected"
+                : "")
+            }
+            onClick={() => setSelectedAnimal(animal)}
+          >
+            <img src={animal.icon} alt={animal.label} />
+            <div className="animal-option__label">{animal.label}</div>
           </div>
-        </div>
+        ))}
       </div>
-      <form className="Add-Animal-Container__animal-form"></form>
-      <div className="Add-Animal-Container__buttons">
+      <form className="add-animal-container__animal-form">
+        <TextField required label="Animal name" />
+        <TextField required label="Breed" />
+        <TextField label="Weight" />
+        <TextField label="Species" />
+        <TextField required label="Birth Date" />
+        <TextField label="Coloring" />
+        <TextField label="Microchip/ID" />
+        <FormControl fullWidth>
+          <InputLabel>Gender</InputLabel>
+          <Select value={gender} label="Gender">
+            <MenuItem value="male">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+          </Select>
+        </FormControl>
+      </form>
+      <div className="add-animal-container__buttons">
         <Button>ADD MEDICAL RECORDS</Button>
         <Button>SAVE AND EXIT</Button>
       </div>
