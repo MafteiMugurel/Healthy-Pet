@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import plusIcon from "../../../assets/plus.svg";
 import syringeIcon from "../../../assets/syringe.svg";
 import cakeIcon from "../../../assets/cake.svg";
@@ -18,21 +19,23 @@ const Card = () => {
       <div className="card-container__info">
         <div className="card-container__info__item">
           <img src={cakeIcon} alt="CakeIcon" />
-          <p>How old</p>
+          How old is your pet?
         </div>
         <div className="card-container__info__item">
           <img src={calendarIcon} alt="CalendarIcon" />
-          <p>Calendar</p>
+          Calendar
         </div>
         <div className="card-container__info__item">
           <img src={syringeIcon} alt="SyringeIcon" />
-          <p>Vaccine</p>
+          Vaccines
         </div>
       </div>
 
       <div className="card-container__actions">
-        <button>View</button>
-        <button>Add Record</button>
+        <Button variant="contained">View</Button>
+        <Button variant="contained" color="success">
+          Add Record
+        </Button>
       </div>
     </div>
   );
