@@ -8,25 +8,19 @@ import {
 } from "@mui/material";
 import "./add-animal.scss";
 
-import turtleIcon from "../../assets/turtle.svg";
-import catIcon from "../../assets/cat.svg";
-import dogIcon from "../../assets/dog.svg";
-import rabbitIcon from "../../assets/rabbit.svg";
-import reptileIcon from "../../assets/reptile.svg";
-import birdIcon from "../../assets/bird.svg";
-import otherIcon from "../../assets/other.svg";
 import { useState } from "react";
+import SVGIcon from "../../components/svg-icon/svg-icon";
 
 const AddAnimal = () => {
   let gender;
   const animalTypes = [
-    { id: "cat", label: "Cat", icon: catIcon },
-    { id: "dog", label: "Dog", icon: dogIcon },
-    { id: "bird", label: "Bird", icon: birdIcon },
-    { id: "rabbit", label: "Rabbit", icon: rabbitIcon },
-    { id: "reptile", label: "Reptile", icon: reptileIcon },
-    { id: "turtle", label: "Turtle", icon: turtleIcon },
-    { id: "other", label: "Other", icon: otherIcon },
+    { id: "cat", label: "Cat", icon: "cat" },
+    { id: "dog", label: "Dog", icon: "dog" },
+    { id: "bird", label: "Bird", icon: "bird" },
+    { id: "rabbit", label: "Rabbit", icon: "rabbit" },
+    { id: "reptile", label: "Reptile", icon: "reptile" },
+    { id: "turtle", label: "Turtle", icon: "turtle" },
+    { id: "other", label: "Other", icon: "question-mark" },
   ];
   const [selectedAnimal, setSelectedAnimal] = useState({} as any);
 
@@ -48,7 +42,7 @@ const AddAnimal = () => {
             }
             onClick={() => setSelectedAnimal(animal)}
           >
-            <img src={animal.icon} alt={animal.label} />
+            <SVGIcon type={animal.icon} />
             <div className="animal-option__label">{animal.label}</div>
           </div>
         ))}
