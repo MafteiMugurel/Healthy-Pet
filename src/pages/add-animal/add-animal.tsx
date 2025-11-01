@@ -7,6 +7,9 @@ import {
   TextField,
 } from "@mui/material";
 import "./add-animal.scss";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
@@ -52,7 +55,9 @@ const AddAnimal = () => {
         <TextField required label="Breed" />
         <TextField label="Weight" />
         <TextField label="Species" />
-        <TextField required label="Birth Date" />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker />
+        </LocalizationProvider>
         <TextField label="Coloring" />
         <TextField label="Microchip/ID" />
         <FormControl fullWidth>

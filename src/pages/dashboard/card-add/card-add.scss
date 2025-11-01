@@ -1,36 +1,60 @@
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .card-add-container {
-  width: 22vh;
-  height: 36vh;
+  width: 250px;
   background-color: white;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 2vh;
-  padding: 2vh 1vw;
+  box-shadow: var(--box-shadow);
+  border-radius: 8px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 1vh 1vw;
+  margin: 8px;
 
   &__header {
     display: flex;
-    flex: 0 1 55%;
     flex-flow: column;
-    justify-content: space-between;
     align-items: center;
-    text-align: center;
-    margin: 2vh 0;
+    margin: 16px 0;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 24px;
 
-    img {
-      width: auto;
-      height: 4vh;
+    &__image {
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
-      background-color: teal;
-      padding: 4vh;
+      background-color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 16px;
+      border: 2px solid var(--primary-color);
+      transition: 0.3s;
+
+      svg {
+        width: 150px;
+        height: auto;
+        stroke: white;
+      }
     }
   }
 
-  &__actions {
-    display: flex;
-    flex: 0 1 10%;
-    justify-content: flex-end;
+  &:hover {
+    cursor: pointer;
+
+    .card-add-container {
+      &__header {
+        &__image {
+          background-color: white;
+          border: 2px solid var(--primary-color);
+
+          svg {
+            stroke: var(--primary-color);
+          }
+        }
+      }
+    }
   }
 }
