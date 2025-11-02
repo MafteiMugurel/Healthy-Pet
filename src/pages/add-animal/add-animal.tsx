@@ -46,15 +46,23 @@ const AddAnimal = () => {
         {animalTypes.map((animal) => (
           <div
             key={animal.id}
-            className={
-              "animal-option" +
-              (selectedAnimal.id === animal.id
-                ? " animal-option__selected"
-                : "")
-            }
+            className="animal-option-wrapper"
             onClick={() => setSelectedAnimal(animal)}
           >
-            <SVGIcon type={animal.icon} />
+            <div
+              key={animal.id}
+              className={
+                "animal-option" +
+                (selectedAnimal.id === animal.id
+                  ? " animal-option__selected"
+                  : "")
+              }
+            >
+              <SVGIcon type={animal.icon} />
+            </div>
+            <div className="animal-option__label">
+              {animal.id.charAt(0).toUpperCase() + animal.id.slice(1)}
+            </div>
           </div>
         ))}
       </div>
@@ -64,22 +72,32 @@ const AddAnimal = () => {
           label="Animal name"
           className="field-single"
           fullWidth
+          size="small"
+          margin="dense"
         />
-        <TextField required label="Breed" />
-        <TextField label="Species" />
+        <TextField required label="Breed" size="small" margin="dense" />
+        <TextField label="Species" size="small" margin="dense" />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker label="Birth date" />
+          <DatePicker
+            label="Birth date"
+            slotProps={{ textField: { size: "small", margin: "dense" } }}
+          />
         </LocalizationProvider>
-        <FormControl>
+        <FormControl fullWidth size="small">
           <InputLabel>Gender</InputLabel>
           <Select value={gender} label="Gender">
             <MenuItem value="male">Male</MenuItem>
             <MenuItem value="female">Female</MenuItem>
           </Select>
         </FormControl>
-        <TextField label="Weight" />
-        <TextField label="Coloring" />
-        <TextField label="Microchip / ID number" className="full-width" />
+        <TextField label="Weight" size="small" margin="dense" />
+        <TextField label="Coloring" size="small" margin="dense" />
+        <TextField
+          label="Microchip / ID number"
+          className="full-width"
+          size="small"
+          margin="dense"
+        />
       </form>
 
       <div className="add-animal-footer">
