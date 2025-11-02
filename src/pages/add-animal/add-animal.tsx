@@ -29,85 +29,61 @@ const AddAnimal = () => {
 
   return (
     <div className="add-animal-container">
-      <div className="add-animal-header">
-        <div className="add-animal-header__topbar">
-          <div className="add-animal-header__topbar__logo">
-            <h1>HealthyPet</h1>
-          </div>
-        </div>
-        <div className="add-animal-header__content">
-          <h2 className="add-animal-header__content__title">
-            Add new animal form
-          </h2>
-          <p>What type of animal it is? Select one of the questions</p>
-        </div>
-      </div>
-      <div className="add-animal-container__animal-select">
-        {animalTypes.map((animal) => (
-          <div
-            key={animal.id}
-            className="animal-option-wrapper"
-            onClick={() => setSelectedAnimal(animal)}
-          >
-            <div
-              key={animal.id}
-              className={
-                "animal-option" +
-                (selectedAnimal.id === animal.id
-                  ? " animal-option__selected"
-                  : "")
-              }
-            >
-              <SVGIcon type={animal.icon} />
-            </div>
-            <div className="animal-option__label">
+      <div className="add-animal-container__content">
+        <div className="add-animal-container__title">Add new animal form</div>
+        <p>What type of animal it is? Select one of the questions</p>
+
+        <div className="add-animal-container__animal-select">
+          {animalTypes.map((animal) => (
+            <div key={animal.id} className="animal-option-wrapper">
+              <div
+                key={animal.id}
+                onClick={() => setSelectedAnimal(animal)}
+                className={
+                  "animal-option" +
+                  (selectedAnimal.id === animal.id
+                    ? " animal-option__selected"
+                    : "")
+                }
+              >
+                <SVGIcon type={animal.icon} />
+              </div>
               {animal.id.charAt(0).toUpperCase() + animal.id.slice(1)}
             </div>
-          </div>
-        ))}
-      </div>
-      <form className="add-animal-container__animal-form">
-        <TextField
-          required
-          label="Animal name"
-          className="field-single"
-          fullWidth
-          size="small"
-          margin="dense"
-        />
-        <TextField required label="Breed" size="small" margin="dense" />
-        <TextField label="Species" size="small" margin="dense" />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Birth date"
-            slotProps={{ textField: { size: "small", margin: "dense" } }}
+          ))}
+        </div>
+        <form className="add-animal-container__animal-form">
+          <TextField required label="Animal name" fullWidth size="small" />
+          <TextField required label="Breed" size="small" />
+          <TextField label="Species" size="small" />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Birth date"
+              slotProps={{ textField: { size: "small" } }}
+            />
+          </LocalizationProvider>
+          <FormControl fullWidth size="small">
+            <InputLabel>Gender</InputLabel>
+            <Select value={gender} label="Gender">
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField label="Weight" size="small" />
+          <TextField label="Coloring" size="small" />
+          <TextField
+            label="Microchip / ID number"
+            className="full-width"
+            size="small"
           />
-        </LocalizationProvider>
-        <FormControl fullWidth size="small">
-          <InputLabel>Gender</InputLabel>
-          <Select value={gender} label="Gender">
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField label="Weight" size="small" margin="dense" />
-        <TextField label="Coloring" size="small" margin="dense" />
-        <TextField
-          label="Microchip / ID number"
-          className="full-width"
-          size="small"
-          margin="dense"
-        />
-      </form>
-
-      <div className="add-animal-footer">
-        <p className="add-animal-footer__text">Next, you have to</p>
-        <Button className="add-animal-footer__btn primary">
-          ADD MEDICAL RECORDS
-        </Button>
-        <p className="add-animal-footer__text"> or just </p>
-        <Button className="add-animal-footer__btn secondary">
-          SAVE AND EXIT
+        </form>
+      </div>
+      <div className="add-animal-actions">
+        <span>Next, you have to</span>
+        <Button variant="contained">add medical records</Button>
+        <span> or just </span>
+        <Button variant="contained" color="success">
+          save and exit
         </Button>
       </div>
     </div>
