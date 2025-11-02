@@ -1,0 +1,70 @@
+.add-medical-container {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  &__title {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+
+  &__medical-select {
+    display: flex;
+    margin: 32px 0;
+    gap: 24px;
+
+    .medical-option-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+
+      .medical-option {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        box-shadow: var(--box-shadow);
+
+        svg {
+          width: 54px;
+          height: 54px;
+          object-fit: contain;
+          fill: var(--primary-color);
+          display: block;
+        }
+
+        &__selected {
+          background-color: var(--primary-color);
+          color: white;
+          box-shadow: var(--box-shadow);
+
+          svg {
+            fill: white;
+          }
+        }
+      }
+    }
+  }
+
+  &__medical-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .add-medical-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+}

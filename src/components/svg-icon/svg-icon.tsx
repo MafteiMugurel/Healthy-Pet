@@ -9,6 +9,9 @@ import { ReactComponent as RabbitIcon } from "../../assets/rabbit.svg";
 import { ReactComponent as ReptileIcon } from "../../assets/reptile.svg";
 import { ReactComponent as BirdIcon } from "../../assets/bird.svg";
 import { ReactComponent as QuestionMark } from "../../assets/question-mark.svg";
+import { ReactComponent as SyringeIcon } from "../../assets/syringe.svg";
+import { ReactComponent as DocumentIcon } from "../../assets/document.svg";
+import { ReactComponent as DropIcon } from "../../assets/drop.svg";
 
 const SVGIcon = ({ type }: { type: string }) => {
   switch (type) {
@@ -34,6 +37,12 @@ const SVGIcon = ({ type }: { type: string }) => {
       return <TurtleIcon />;
     case "question-mark":
       return <QuestionMark />;
+    case "syringe":
+      return <SyringeIcon />;
+    case "document":
+      return <DocumentIcon />;
+    case "drop":
+      return <DropIcon />;
     default:
       return null;
   }

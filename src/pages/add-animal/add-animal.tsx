@@ -30,8 +30,11 @@ const AddAnimal = () => {
   return (
     <div className="add-animal-container">
       <div className="add-animal-container__content">
-        <div className="add-animal-container__title">Add new animal form</div>
-        <p>What type of animal it is? Select one of the questions</p>
+        <div className="add-animal-container__title">Add new animal</div>
+        <p>
+          What type of animal it is? Select one of the types and fill in the
+          required information.
+        </p>
 
         <div className="add-animal-container__animal-select">
           {animalTypes.map((animal) => (

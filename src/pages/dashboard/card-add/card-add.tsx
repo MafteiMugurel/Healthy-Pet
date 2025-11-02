@@ -4,7 +4,7 @@ import "./card-add.scss";
 
 const CardAdd = () => {
   return (
-    <Link to="/add-animal" className="card-link">
+    <Link to="/add-animal" className="custom-link">
       <div className="card-add-container">
         <div className="card-add-container__header">
           <div className="card-add-container__header__image">

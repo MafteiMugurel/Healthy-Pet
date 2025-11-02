@@ -4,8 +4,8 @@ import SVGIcon from "../../../components/svg-icon/svg-icon";
 import { Animal } from "../../../interfaces/animal.model";
 
 const Card = ({ data }: { data: Animal }) => {
-  const calculateAge = (dateOfBirth: string) => {
-    const birthDate = new Date(dateOfBirth);
+  const calculateAge = () => {
+    const birthDate = new Date(data.dateOfBirth);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -18,17 +18,32 @@ const Card = ({ data }: { data: Animal }) => {
     return age;
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = () => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "long",
       day: "numeric",
     };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    return new Date(data.lastVetVisit).toLocaleDateString(undefined, options);
   };
 
-  // TODO
-  const reminderColor = data.reminders.length > 0 ? "red" : "green";
+  const overdueRemindersCount = () => {
+    return (
+      data.reminders.filter((reminder) => {
+        const reminderDate = new Date(reminder.date);
+        const today = new Date();
+        return reminderDate < today;
+      }).length || 0
+    );
+  };
+
+  const reminderColor = () => {
+    if (data.reminders.length === 0) return "success";
+
+    if (overdueRemindersCount() > 0) return "error";
+
+    return "warning";
+  };
 
   return (
     <div className="card-container">
@@ -45,16 +60,18 @@ const Card = ({ data }: { data: Animal }) => {
       <div className="card-container__info">
         <div className="card-container__info__item">
           <SVGIcon type="cake" />
-          {calculateAge(data.dateOfBirth)} years
+          {calculateAge()} years
         </div>
         <div className="card-container__info__item">
           <SVGIcon type="calendar" />
-          {formatDate(data.lastVetVisit)}
+          {formatDate()}
         </div>
         <div className="card-container__info__item">
           <SVGIcon type="bell" />
-          <span className={`${reminderColor}`}>
-            {data.reminders.length} reminders
+          <span className={`${reminderColor()}`}>
+            {data.reminders.length} reminders{" "}
+            {overdueRemindersCount() > 0 &&
+              `(${overdueRemindersCount()} overdue)`}
           </span>
         </div>
       </div>

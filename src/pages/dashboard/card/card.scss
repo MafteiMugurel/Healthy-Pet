@@ -47,14 +47,17 @@
         fill: var(--primary-color);
       }
 
-      span {
-        .red {
-          color: orange;
-        }
+      .success {
+        color: var(--success-color);
+      }
 
-        .green {
-          color: green;
-        }
+      .warning {
+        color: var(--warning-color);
+      }
+
+      .error {
+        color: var(--error-color);
+        font-weight: bold;
       }
     }
   }
