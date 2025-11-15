@@ -3,9 +3,7 @@ import "./header.scss";
 import { useAuth } from "../../context/AuthContext";
 
 const Header = () => {
-  const auth = useAuth();
-  if (!auth) return null;
-  const { user } = auth;
+  const { user } = useAuth();
 
   return (
     <header>
@@ -13,12 +11,7 @@ const Header = () => {
         <div className="header-container__title">HealthyPet</div>
         <div className="header-container__actions">
           {user && (
-            <Button
-              variant="contained"
-              onClick={() => {
-                (auth as any).logout?.();
-              }}
-            >
+            <Button variant="contained" onClick={() => {}}>
               Logout
             </Button>
           )}

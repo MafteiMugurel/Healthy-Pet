@@ -20,7 +20,7 @@ const Homepage = () => {
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate("/login");
+      navigate("/", { replace: true });
     }
   }, [user, loading, navigate]);
 
