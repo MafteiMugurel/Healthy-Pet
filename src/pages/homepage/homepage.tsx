@@ -11,35 +11,18 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { logIn, signUp } from "../../services/firebaseService";
 
 const Homepage = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState("none");
-  const { setIsLoggedIn } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    // TODO
-    const checkAuth = async () => {
-      try {
-        // const response = await fetch("/api/auth/status");
-        const response = { ok: false }; // Mocked response
-
-        if (!response.ok) throw new Error("Not authenticated");
-        // const data = await response.json();
-        const data = { loggedIn: false };
-
-        if (data.loggedIn) {
-          navigate("/dashboard", { replace: true });
-        }
-      } catch {
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [user, loading, navigate]);
 
   const openLoginDialog = () => {
     setDialogOpen("login");
@@ -60,20 +43,38 @@ const Homepage = () => {
     console.log(values);
 
     if (dialogOpen === "register") {
-      // Registration logic here
       console.log("Registering user:", values);
       if (values.password !== values.repeatPassword) {
         alert("Passwords do not match!");
         return;
       }
+      signUp(
+        values.email as string,
+        values.password as string,
+        values.name as string
+      )
+        .then((response) => {
+          console.log("Registration successful:", response);
+          navigate("/dashboard", { replace: true });
+          handleClose();
+        })
+        .catch((error) => {
+          alert("Registration failed: " + error.message);
+          return;
+        });
     } else {
-      // Login logic here
       console.log("Logging in user:", values);
+      logIn(values.email as string, values.password as string)
+        .then((response) => {
+          console.log("Login successful:", response);
+          navigate("/dashboard", { replace: true });
+          handleClose();
+        })
+        .catch((error) => {
+          alert("Login failed: " + error.message);
+          return;
+        });
     }
-
-    setIsLoggedIn(true);
-    navigate("/dashboard", { replace: true });
-    handleClose();
   };
 
   if (loading) {
