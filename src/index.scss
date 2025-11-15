@@ -27,7 +27,7 @@ body,
   height: 100%;
 }
 
-.MuiButton-containedPrimary {
+.MuiButton-containedPrimary:not(.Mui-disabled) {
   background-color: var(--primary-color) !important;
 }
 

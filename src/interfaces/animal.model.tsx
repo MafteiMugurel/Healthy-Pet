@@ -10,4 +10,8 @@ export interface Animal {
   latestVetVisit: string;
   name: string;
   reminders: Reminder[];
+  id: string;
+  breed: string;
+  species: string;
+  gender: string;
 }

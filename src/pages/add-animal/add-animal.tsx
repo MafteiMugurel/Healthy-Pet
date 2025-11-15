@@ -13,8 +13,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
+import { push, ref } from "firebase/database";
+import { db } from "../../services/firebase";
+import { useAuth } from "../../context/AuthContext";
 
 const AddAnimal = () => {
+  const { userData } = useAuth();
   const animalTypes = [
     { id: "cat", icon: "cat" },
     { id: "dog", icon: "dog" },
@@ -36,7 +40,7 @@ const AddAnimal = () => {
     weight: "",
   });
 
-  function handleChange(e: { target: { name: any; value: any } }) {
+  const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     console.log(name, " - ", value);
 
@@ -46,7 +50,31 @@ const AddAnimal = () => {
     }));
 
     console.log(formData);
-  }
+  };
+
+  const handleAddMedical = () => {
+    handleSubmitData().then((newUserRef) => {
+      window.location.href = `/add-medical/${newUserRef.key}`;
+    });
+  };
+
+  const handleSaveAndExit = () => {
+    handleSubmitData().then(() => {
+      window.location.href = "/dashboard";
+    });
+  };
+
+  const handleSubmitData = () => {
+    return (async () => {
+      try {
+        const usersRef = ref(db, `users/${userData?.uid}/animals`);
+        const newUserRef = await push(usersRef, formData);
+        return newUserRef;
+      } catch (error) {
+        throw error;
+      }
+    })();
+  };
 
   return (
     <div className="add-animal-container">
@@ -92,7 +120,6 @@ const AddAnimal = () => {
             name="name"
           />
           <TextField
-            required
             label="Breed"
             size="small"
             onChange={handleChange}
@@ -155,9 +182,20 @@ const AddAnimal = () => {
       </div>
       <div className="add-animal-actions">
         <span>Next, you have to</span>
-        <Button variant="contained">add medical records</Button>
+        <Button
+          variant="contained"
+          onClick={handleAddMedical}
+          disabled={!formData.name.trim()}
+        >
+          add medical records
+        </Button>
         <span> or just </span>
-        <Button variant="contained" color="success">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleSaveAndExit}
+          disabled={!formData.name.trim()}
+        >
           save and exit
         </Button>
       </div>

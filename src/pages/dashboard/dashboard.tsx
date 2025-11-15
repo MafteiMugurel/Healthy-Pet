@@ -14,8 +14,19 @@ const Dashboard = () => {
     const loadProfile = async () => {
       if (userData?.uid) {
         const data = await fetchAnimals(userData.uid);
-        console.log(data);
-        setAnimals(data);
+        const animalsArray: Animal[] = data
+          ? Object.entries(data).map(([id, item]) => {
+              const castItem = item as any;
+              return {
+                ...(castItem as Animal),
+                id,
+                reminders: castItem?.reminders
+                  ? Object.values(castItem.reminders)
+                  : [],
+              };
+            })
+          : [];
+        setAnimals(animalsArray);
       }
     };
 
