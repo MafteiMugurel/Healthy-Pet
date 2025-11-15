@@ -6,8 +6,8 @@ interface Reminder {
 
 export interface Animal {
   dateOfBirth: string;
-  imageUrl: string;
-  lastVetVisit: string;
+  imgURL: string;
+  latestVetVisit: string;
   name: string;
   reminders: Reminder[];
 }

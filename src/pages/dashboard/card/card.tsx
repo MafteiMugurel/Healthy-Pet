@@ -4,6 +4,7 @@ import SVGIcon from "../../../components/svg-icon/svg-icon";
 import { Animal } from "../../../interfaces/animal.model";
 
 const Card = ({ data }: { data: Animal }) => {
+  console.log(data);
   const calculateAge = () => {
     const birthDate = new Date(data.dateOfBirth);
     const today = new Date();
@@ -24,7 +25,7 @@ const Card = ({ data }: { data: Animal }) => {
       month: "long",
       day: "numeric",
     };
-    return new Date(data.lastVetVisit).toLocaleDateString(undefined, options);
+    return new Date(data.latestVetVisit).toLocaleDateString(undefined, options);
   };
 
   const overdueRemindersCount = () => {
@@ -50,7 +51,7 @@ const Card = ({ data }: { data: Animal }) => {
       <div className="card-container__header">
         <div
           style={{
-            backgroundImage: `url(${data.imageUrl})`,
+            backgroundImage: `url(${data.imgURL})`,
           }}
           className="card-container__header__image"
         />
@@ -69,7 +70,7 @@ const Card = ({ data }: { data: Animal }) => {
         <div className="card-container__info__item">
           <SVGIcon type="bell" />
           <span className={`${reminderColor()}`}>
-            {data.reminders.length} reminders{" "}
+            {Object.keys(data.reminders).length} reminders{" "}
             {overdueRemindersCount() > 0 &&
               `(${overdueRemindersCount()} overdue)`}
           </span>

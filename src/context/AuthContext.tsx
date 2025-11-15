@@ -12,6 +12,7 @@ import { auth, db } from "../services/firebase";
 type UserData = {
   name?: string;
   email?: string;
+  uid?: string;
   [key: string]: any;
 };
 
@@ -38,7 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (currentUser) {
         const userRef = ref(db, `users/${currentUser.uid}`);
         const snapshot = await get(userRef);
-        setUserData(snapshot.exists() ? snapshot.val() : null);
+        setUserData(
+          snapshot.exists() ? { ...snapshot.val(), uid: currentUser.uid } : null
+        );
       } else {
         setUserData(null);
       }
