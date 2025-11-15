@@ -32,6 +32,7 @@ const AddAnimal = () => {
     gender: "",
     microchipId: "",
     name: "",
+    species: "",
     weight: "",
   });
 
@@ -58,6 +59,7 @@ const AddAnimal = () => {
 
         <div className="add-animal-container__animal-select">
           {animalTypes.map((animal) => (
+            // TODO there's a bug
             <div key={animal.id} className="animal-option-wrapper">
               <div
                 key={animal.id}
@@ -97,7 +99,13 @@ const AddAnimal = () => {
             value={formData.breed}
             name="breed"
           />
-          <TextField label="Species" size="small" />
+          <TextField
+            label="Species"
+            size="small"
+            onChange={handleChange}
+            value={formData.species}
+            name="species"
+          />
           {/* TODO onChange not working here */}
           {/* onChange={handleChange} */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
