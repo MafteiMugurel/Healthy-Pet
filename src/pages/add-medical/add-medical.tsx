@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
 import { Button, styled, TextField } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "./add-medical.scss";
@@ -87,7 +88,7 @@ const AddMedical = () => {
             </>
           )}
 
-          {selectedRecordType.id !== "vaccine" && (
+          {selectedRecordType.id && selectedRecordType.id !== "vaccine" && (
             <Button
               component="label"
               role={undefined}
@@ -103,11 +104,16 @@ const AddMedical = () => {
             </Button>
           )}
         </form>
-      </div>
-      <div className="add-medical-actions">
-        <Button variant="contained" color="success">
-          save and exit
-        </Button>
+        <div className="add-medical-actions">
+          <Button
+            variant="contained"
+            color="success"
+            component={RouterLink}
+            to="/dashboard"
+          >
+            save and exit
+          </Button>
+        </div>
       </div>
     </div>
   );
