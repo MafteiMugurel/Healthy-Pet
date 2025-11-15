@@ -15,7 +15,6 @@ import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
 
 const AddAnimal = () => {
-  let gender;
   const animalTypes = [
     { id: "cat", icon: "cat" },
     { id: "dog", icon: "dog" },
@@ -25,7 +24,28 @@ const AddAnimal = () => {
     { id: "turtle", icon: "turtle" },
     { id: "other", icon: "question-mark" },
   ];
-  const [selectedAnimal, setSelectedAnimal] = useState({} as any);
+  const [formData, setFormData] = useState({
+    animalType: "cat",
+    breed: "",
+    coloring: "",
+    dateOfBirth: null,
+    gender: "",
+    microchipId: "",
+    name: "",
+    weight: "",
+  });
+
+  function handleChange(e: { target: { name: any; value: any } }) {
+    const { name, value } = e.target;
+    console.log(name, " - ", value);
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    console.log(formData);
+  }
 
   return (
     <div className="add-animal-container">
@@ -41,10 +61,14 @@ const AddAnimal = () => {
             <div key={animal.id} className="animal-option-wrapper">
               <div
                 key={animal.id}
-                onClick={() => setSelectedAnimal(animal)}
+                onClick={() =>
+                  handleChange({
+                    target: { name: "animalType", value: animal.id },
+                  })
+                }
                 className={
                   "animal-option" +
-                  (selectedAnimal.id === animal.id
+                  (formData.animalType === animal.id
                     ? " animal-option__selected"
                     : "")
                 }
@@ -56,28 +80,68 @@ const AddAnimal = () => {
           ))}
         </div>
         <form className="add-animal-container__animal-form">
-          <TextField required label="Animal name" fullWidth size="small" />
-          <TextField required label="Breed" size="small" />
+          <TextField
+            required
+            label="Animal name"
+            fullWidth
+            size="small"
+            onChange={handleChange}
+            value={formData.name}
+            name="name"
+          />
+          <TextField
+            required
+            label="Breed"
+            size="small"
+            onChange={handleChange}
+            value={formData.breed}
+            name="breed"
+          />
           <TextField label="Species" size="small" />
+          {/* TODO onChange not working here */}
+          {/* onChange={handleChange} */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Birth date"
               slotProps={{ textField: { size: "small" } }}
+              value={formData.dateOfBirth}
+              name="dateOfBirth"
+              onChange={(value) => console.log(value)}
             />
           </LocalizationProvider>
           <FormControl fullWidth size="small">
             <InputLabel>Gender</InputLabel>
-            <Select value={gender} label="Gender">
+            <Select
+              label="Gender"
+              onChange={handleChange}
+              value={formData.gender}
+              name="gender"
+            >
               <MenuItem value="male">Male</MenuItem>
               <MenuItem value="female">Female</MenuItem>
             </Select>
           </FormControl>
-          <TextField label="Weight" size="small" />
-          <TextField label="Coloring" size="small" />
+          <TextField
+            label="Weight"
+            size="small"
+            onChange={handleChange}
+            value={formData.weight}
+            name="weight"
+          />
+          <TextField
+            label="Coloring"
+            size="small"
+            onChange={handleChange}
+            value={formData.coloring}
+            name="coloring"
+          />
           <TextField
             label="Microchip / ID number"
             className="full-width"
             size="small"
+            onChange={handleChange}
+            value={formData.microchipId}
+            name="microchipId"
           />
         </form>
       </div>
