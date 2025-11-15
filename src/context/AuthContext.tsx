@@ -32,16 +32,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsubscribe;
   }, []);
 
-  const logout = () => signOut(auth);
-
-  const value = {
-    user,
-    loading,
-    logout,
+  const logout = async () => {
+    await signOut(auth);
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, loading, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
