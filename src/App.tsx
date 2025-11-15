@@ -34,7 +34,7 @@ function App() {
                 }
               ></Route>
               <Route
-                path="/add-medical"
+                path="/add-medical/:animalId"
                 element={
                   <ProtectedRoute>
                     <AddMedical />

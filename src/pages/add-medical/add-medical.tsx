@@ -1,11 +1,10 @@
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
-import { Button, styled, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "./add-medical.scss";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const AddMedical = () => {
   const recordType = [
@@ -13,24 +12,28 @@ const AddMedical = () => {
     { id: "consultation", icon: "document" },
     { id: "blood work", icon: "drop" },
   ];
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
 
   const [selectedRecordType, setSelectedRecordType] = useState({} as any);
+
+  const getAnimalIdFromUrl = (): string | undefined => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("animalId")) return params.get("animalId") || undefined;
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      return parts.length ? parts[parts.length - 1] : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+  const animalId = getAnimalIdFromUrl();
 
   return (
     <div className="add-medical-container">
       <div className="add-medical-container__content">
-        <div className="add-medical-container__title">Add medical records</div>
+        <div className="add-medical-container__title">
+          {/* Id to be removed, for testing purposes only */}
+          Add medical records ({animalId})
+        </div>
         <p>What medical information would you like to add?</p>
 
         <div className="add-medical-container__medical-select">
@@ -54,6 +57,8 @@ const AddMedical = () => {
         </div>
 
         <form className="add-medical-container__medical-form">
+          {/* TODO there should be no add file anymore because it takes too much to
+          implement instead we will have fields only to fill in data */}
           {selectedRecordType.id === "vaccine" && (
             <>
               <TextField required label="Vaccine name" fullWidth size="small" />
@@ -65,7 +70,6 @@ const AddMedical = () => {
               </LocalizationProvider>
             </>
           )}
-
           {selectedRecordType.id === "consultation" && (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -76,7 +80,6 @@ const AddMedical = () => {
               </LocalizationProvider>
             </>
           )}
-
           {selectedRecordType.id === "blood work" && (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -87,22 +90,8 @@ const AddMedical = () => {
               </LocalizationProvider>
             </>
           )}
-
-          {selectedRecordType.id && selectedRecordType.id !== "vaccine" && (
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              startIcon={<CloudUploadIcon />}
-            >
-              Upload file
-              <VisuallyHiddenInput
-                type="file"
-                onChange={(event) => console.log(event.target.files)}
-              />
-            </Button>
-          )}
+          {/* TODO there should be no add file anymore because it takes too much to
+          implement instead we will have fields only to fill in data */}
         </form>
         <div className="add-medical-actions">
           <Button

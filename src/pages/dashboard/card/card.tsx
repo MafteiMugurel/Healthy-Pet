@@ -4,7 +4,6 @@ import SVGIcon from "../../../components/svg-icon/svg-icon";
 import { Animal } from "../../../interfaces/animal.model";
 
 const Card = ({ data }: { data: Animal }) => {
-  console.log(data);
   const calculateAge = () => {
     const birthDate = new Date(data.dateOfBirth);
     const today = new Date();
@@ -46,6 +45,10 @@ const Card = ({ data }: { data: Animal }) => {
     return "warning";
   };
 
+  const redirectToAddMedical = (animalId: string) => {
+    window.location.href = "/add-medical/" + animalId;
+  };
+
   return (
     <div className="card-container">
       <div className="card-container__header">
@@ -79,7 +82,11 @@ const Card = ({ data }: { data: Animal }) => {
 
       <div className="card-container__actions">
         <Button variant="contained">View</Button>
-        <Button variant="contained" color="success">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => redirectToAddMedical(data.id)}
+        >
           Add data
         </Button>
       </div>
