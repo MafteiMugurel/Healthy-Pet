@@ -57,7 +57,7 @@
   &__animal-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 8px 24px;
 
     .full-width {
       grid-column: 1 / 3;
