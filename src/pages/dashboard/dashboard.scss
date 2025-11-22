@@ -1,6 +1,16 @@
 .dashboard-container {
-  display: flex;
-  margin: 4vh 2vw;
-  justify-content: flex-start;
-  align-items: flex-start;
+  &__salutation {
+    margin: 4vh 2vw 0 2vw;
+
+    b {
+      color: var(--primary-color);
+    }
+  }
+
+  &__cards {
+    display: flex;
+    margin: 4vh 2vw;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 }

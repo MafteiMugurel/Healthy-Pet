@@ -13,9 +13,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
+import { push, ref } from "firebase/database";
+import { db } from "../../services/firebase";
+import { useAuth } from "../../context/AuthContext";
 
 const AddAnimal = () => {
-  let gender;
+  const { userData } = useAuth();
   const animalTypes = [
     { id: "cat", icon: "cat" },
     { id: "dog", icon: "dog" },
@@ -25,89 +28,175 @@ const AddAnimal = () => {
     { id: "turtle", icon: "turtle" },
     { id: "other", icon: "question-mark" },
   ];
-  const [selectedAnimal, setSelectedAnimal] = useState({} as any);
+  const [formData, setFormData] = useState({
+    animalType: "cat",
+    breed: "",
+    coloring: "",
+    dateOfBirth: null,
+    gender: "",
+    microchipId: "",
+    name: "",
+    species: "",
+    weight: "",
+  });
+
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    console.log(name, " - ", value);
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    console.log(formData);
+  };
+
+  const handleAddMedical = () => {
+    handleSubmitData().then((newUserRef) => {
+      window.location.href = `/add-medical/${newUserRef.key}`;
+    });
+  };
+
+  const handleSaveAndExit = () => {
+    handleSubmitData().then(() => {
+      window.location.href = "/dashboard";
+    });
+  };
+
+  const handleSubmitData = () => {
+    return (async () => {
+      try {
+        const usersRef = ref(db, `users/${userData?.uid}/animals`);
+        const newUserRef = await push(usersRef, formData);
+        return newUserRef;
+      } catch (error) {
+        throw error;
+      }
+    })();
+  };
 
   return (
     <div className="add-animal-container">
-      <div className="add-animal-header">
-        <div className="add-animal-header__topbar">
-          <div className="add-animal-header__topbar__logo">
-            <h1>HealthyPet</h1>
-          </div>
-        </div>
-        <div className="add-animal-header__content">
-          <h2 className="add-animal-header__content__title">
-            Add new animal form
-          </h2>
-          <p>What type of animal it is? Click on one of the buttons below:</p>
-        </div>
-      </div>
-      <div className="add-animal-container__animal-select">
-        {animalTypes.map((animal) => (
-          <div
-            key={animal.id}
-            className="animal-option-wrapper"
-            onClick={() => setSelectedAnimal(animal)}
-          >
-            <div
-              key={animal.id}
-              className={
-                "animal-option" +
-                (selectedAnimal.id === animal.id
-                  ? " animal-option__selected"
-                  : "")
-              }
-            >
-              <SVGIcon type={animal.icon} />
-            </div>
-            <div className="animal-option__label">
+      <div className="add-animal-container__content">
+        <div className="add-animal-container__title">Add new animal</div>
+        <p>
+          What type of animal it is? Select one of the types and fill in the
+          required information.
+        </p>
+
+        <div className="add-animal-container__animal-select">
+          {animalTypes.map((animal) => (
+            // TODO there's a bug
+            <div key={animal.id} className="animal-option-wrapper">
+              <div
+                key={animal.id}
+                onClick={() =>
+                  handleChange({
+                    target: { name: "animalType", value: animal.id },
+                  })
+                }
+                className={
+                  "animal-option" +
+                  (formData.animalType === animal.id
+                    ? " animal-option__selected"
+                    : "")
+                }
+              >
+                <SVGIcon type={animal.icon} />
+              </div>
               {animal.id.charAt(0).toUpperCase() + animal.id.slice(1)}
             </div>
-          </div>
-        ))}
-      </div>
-      <form className="add-animal-container__animal-form">
-        <TextField
-          required
-          label="Animal name"
-          className="field-single"
-          fullWidth
-          size="small"
-          margin="dense"
-        />
-        <TextField required label="Breed" size="small" margin="dense" />
-        <TextField label="Species" size="small" margin="dense" />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Birth date"
-            slotProps={{ textField: { size: "small", margin: "dense" } }}
+          ))}
+        </div>
+        <form className="add-animal-container__animal-form">
+          <TextField
+            required
+            label="Animal name"
+            fullWidth
+            size="small"
+            onChange={handleChange}
+            value={formData.name}
+            name="name"
           />
-        </LocalizationProvider>
-        <FormControl fullWidth size="small">
-          <InputLabel>Gender</InputLabel>
-          <Select value={gender} label="Gender">
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField label="Weight" size="small" margin="dense" />
-        <TextField label="Coloring" size="small" margin="dense" />
-        <TextField
-          label="Microchip / ID number"
-          className="full-width"
-          size="small"
-          margin="dense"
-        />
-      </form>
-
-      <div className="add-animal-footer">
-        <p className="add-animal-footer__text">Next, you have to</p>
-        <Button className="add-animal-footer__btn primary">
-          ADD MEDICAL RECORDS
+          <TextField
+            label="Breed"
+            size="small"
+            onChange={handleChange}
+            value={formData.breed}
+            name="breed"
+          />
+          <TextField
+            label="Species"
+            size="small"
+            onChange={handleChange}
+            value={formData.species}
+            name="species"
+          />
+          {/* TODO onChange not working here */}
+          {/* onChange={handleChange} */}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Birth date"
+              slotProps={{ textField: { size: "small" } }}
+              value={formData.dateOfBirth}
+              name="dateOfBirth"
+              onChange={(value) => console.log(value)}
+            />
+          </LocalizationProvider>
+          <FormControl fullWidth size="small">
+            <InputLabel>Gender</InputLabel>
+            <Select
+              label="Gender"
+              onChange={handleChange}
+              value={formData.gender}
+              name="gender"
+            >
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Weight"
+            size="small"
+            onChange={handleChange}
+            value={formData.weight}
+            name="weight"
+          />
+          <TextField
+            label="Coloring"
+            size="small"
+            onChange={handleChange}
+            value={formData.coloring}
+            name="coloring"
+          />
+          <TextField
+            label="Microchip / ID number"
+            className="full-width"
+            size="small"
+            onChange={handleChange}
+            value={formData.microchipId}
+            name="microchipId"
+          />
+        </form>
+      </div>
+      <div className="add-animal-actions">
+        <span>Next, you have to</span>
+        <Button
+          variant="contained"
+          onClick={handleAddMedical}
+          disabled={!formData.name.trim()}
+        >
+          add medical records
         </Button>
-        <p className="add-animal-footer__text"> or just </p>
-        <Button className="add-animal-footer__btn secondary">
-          SAVE AND EXIT
+        <span> or just </span>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleSaveAndExit}
+          disabled={!formData.name.trim()}
+        >
+          save and exit
         </Button>
       </div>
     </div>
