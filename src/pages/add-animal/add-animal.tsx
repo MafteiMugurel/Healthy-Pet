@@ -39,7 +39,7 @@ const AddAnimal = () => {
           <h2 className="add-animal-header__content__title">
             Add new animal form
           </h2>
-          <p>What type of animal it is? Select one of the questions</p>
+          <p>What type of animal it is? Click on one of the buttons below:</p>
         </div>
       </div>
       <div className="add-animal-container__animal-select">
