@@ -36,8 +36,8 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-container__salutation">
-        Welcome back, <b>{userData?.name}</b>. Here are your pets' health
-        summaries:
+        Welcome back, <b>{userData?.name}</b>! Here are the health summaries for
+        your pets:
       </div>
       <div className="dashboard-container__cards">
         {animals.map((animal) => (
