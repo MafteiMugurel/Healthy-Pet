@@ -51,6 +51,12 @@ const AddAnimal = () => {
 
     console.log(formData);
   };
+  const handleDateChange = (date: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      dateOfBirth: date,
+    }));
+  };
 
   const handleAddMedical = () => {
     handleSubmitData().then((newUserRef) => {
@@ -133,15 +139,14 @@ const AddAnimal = () => {
             value={formData.species}
             name="species"
           />
-          {/* TODO onChange not working here */}
-          {/* onChange={handleChange} */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Birth date"
+              format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
               value={formData.dateOfBirth}
               name="dateOfBirth"
-              onChange={(value) => console.log(value)}
+              onChange={handleDateChange}
             />
           </LocalizationProvider>
           <FormControl fullWidth size="small">
