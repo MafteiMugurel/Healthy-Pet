@@ -3,6 +3,7 @@ import SVGIcon from "../../components/svg-icon/svg-icon";
 import {
   Button,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -49,6 +50,38 @@ const AddMedical = () => {
     vetInterpretation: "", //Blood
     bloodWorkDate: "", //Blood
   });
+
+  const [tempError, setTempError] = useState("");
+  const handleTemperatureChange = (e: { target: { value: string } }) => {
+    const rawValue = e.target.value;
+
+    if (rawValue === "") {
+      setFormData((prev) => ({
+        ...prev,
+        temperature: "",
+      }));
+      setTempError("");
+      return;
+    }
+    const numericPattern = /^[0-9]*[.,]?[0-9]*$/;
+
+    if (!numericPattern.test(rawValue)) {
+      return;
+    }
+    const normalized = rawValue.replace(",", ".");
+
+    const num = Number(normalized);
+
+    if (Number.isNaN(num)) {
+      return;
+    }
+    if (num < 20 || num > 45) {
+      // I searched on the internet and it didnt help, we can modify later if needed
+      setTempError("Temperature must be between 20°C and 45°C");
+    } else {
+      setTempError("");
+    }
+  };
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -371,12 +404,19 @@ const AddMedical = () => {
                 value={formData.weight}
               />
               <TextField
-                label="Temperature"
+                label="Temperature (°C)"
                 fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">°C</InputAdornment>
+                  ),
+                }}
                 size="small"
-                onChange={handleChange}
+                onChange={handleTemperatureChange}
                 name="temperature"
-                value={formData.temperature}
+                value={formData.temperature} //I DONT UNDERSTAND WHY IT DOESN'T WORK
+                error={!!tempError}
+                helperText={tempError}
               />
               <TextField
                 label="Heart rate"
