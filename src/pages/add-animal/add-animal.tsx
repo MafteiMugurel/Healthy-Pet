@@ -93,10 +93,8 @@ const AddAnimal = () => {
 
         <div className="add-animal-container__animal-select">
           {animalTypes.map((animal) => (
-            // TODO there's a bug
             <div key={animal.id} className="animal-option-wrapper">
               <div
-                key={animal.id}
                 onClick={() =>
                   handleChange({
                     target: { name: "animalType", value: animal.id },
