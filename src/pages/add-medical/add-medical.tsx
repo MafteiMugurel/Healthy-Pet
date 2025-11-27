@@ -23,26 +23,31 @@ const AddMedical = () => {
   ];
   const [formData, setFormData] = useState({
     recordType: "",
-    vaccineName: "",
-    manufacturer: "",
-    routeOfAdministration: "",
-    dose: "",
-    batchNumber: "",
-    clinicName: "",
-    vetName: "",
-    sideEffectsObserved: "",
-    medicationsPrescribed: "",
-    treatmentPlan: "",
-    diagnosis: "",
-    symptoms: "",
-    notes: "",
-    weight: "",
-    temperature: "",
-    heartRate: "",
-    medicationAtTimeOfBloodWork: "",
-    labClinicName: "",
-    resultsSummary: "",
-    vetInterpretation: "",
+    vaccineName: "", //Vaccine
+    manufacturer: "", //Vaccine
+    routeOfAdministration: "", //Vaccine
+    dose: "", //Vaccine
+    batchNumber: "", //Vaccine
+    sideEffectsObserved: "", //Vaccine
+    dateAdministered: "", //Vaccine
+    nextDueDate: "", //Vaccine
+    clinicName: "", //Vaccine   //Consultation
+    vetName: "", //Vaccine   //Consultation
+    medicationsPrescribed: "", //Consultation
+    treatmentPlan: "", //Consultation
+    diagnosis: "", //Consultation
+    symptoms: "", //Consultation
+    weight: "", //Consultation
+    temperature: "", //Consultation
+    heartRate: "", //Consultation
+    consultationDate: "", //Consultation
+    followUpDate: "", //Consultation
+    notes: "", //Consultation   //Blood
+    medicationAtTimeOfBloodWork: "", //Blood
+    labClinicName: "", //Blood
+    resultsSummary: "", //Blood
+    vetInterpretation: "", //Blood
+    bloodWorkDate: "", //Blood
   });
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -55,6 +60,12 @@ const AddMedical = () => {
     }));
 
     console.log(formData);
+  };
+  const handleDateChange = (fieldName: string) => (date: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: date ? date.format("DD/MM/YYYY") : " ",
+    }));
   };
 
   const [selectedRecordType, setSelectedRecordType] = useState({} as any);
@@ -91,6 +102,8 @@ const AddMedical = () => {
           clinicName: formData.clinicName,
           vetName: formData.vetName,
           sideEffectsObserved: formData.sideEffectsObserved,
+          dateAdministrated: formData.dateAdministered,
+          nextDueDate: formData.nextDueDate,
         };
         break;
       case "consultation":
@@ -105,6 +118,8 @@ const AddMedical = () => {
           temperature: formData.temperature,
           heartRate: formData.heartRate,
           notes: formData.notes,
+          consultationDate: formData.consultationDate,
+          followUp: formData.followUpDate,
         };
         break;
       case "blood work":
@@ -114,6 +129,7 @@ const AddMedical = () => {
           vetInterpretation: formData.vetInterpretation,
           medicationAtTimeOfBloodWork: formData.medicationAtTimeOfBloodWork,
           notes: formData.notes,
+          bloodWorkDate: formData.bloodWorkDate,
         };
         break;
     }
