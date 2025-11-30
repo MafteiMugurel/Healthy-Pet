@@ -51,12 +51,6 @@ const AddAnimal = () => {
 
     console.log(formData);
   };
-  const handleDateChange = (date: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      dateOfBirth: date,
-    }));
-  };
 
   const handleAddMedical = () => {
     handleSubmitData().then((newUserRef) => {
@@ -144,7 +138,7 @@ const AddAnimal = () => {
               slotProps={{ textField: { size: "small" } }}
               value={formData.dateOfBirth}
               name="dateOfBirth"
-              onChange={handleDateChange}
+              onChange={(value) => console.log(value)}
             />
           </LocalizationProvider>
           <FormControl fullWidth size="small">
