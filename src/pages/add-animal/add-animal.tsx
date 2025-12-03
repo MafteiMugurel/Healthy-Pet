@@ -13,9 +13,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
-import { push, ref } from "firebase/database";
+import { push, ref, set } from "firebase/database";
 import { db } from "../../services/firebase";
 import { useAuth } from "../../context/AuthContext";
+import dayjs from "dayjs";
 
 const AddAnimal = () => {
   const { userData } = useAuth();
@@ -32,7 +33,7 @@ const AddAnimal = () => {
     animalType: "cat",
     breed: "",
     coloring: "",
-    dateOfBirth: null,
+    dateOfBirth: "",
     gender: "",
     microchipId: "",
     name: "",
@@ -136,9 +137,21 @@ const AddAnimal = () => {
               label="Birth date"
               format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
-              value={formData.dateOfBirth}
+              value={formData.dateOfBirth ? dayjs(formData.dateOfBirth) : null}
               name="dateOfBirth"
-              onChange={(value) => console.log(value)}
+              onChange={(value) => {
+                if (value) {
+                  setFormData((prev) => ({
+                    ...prev,
+                    dateOfBirth: value.format("YYYY-MM-DD"),
+                  }));
+                } else {
+                  setFormData((prev) => ({
+                    ...prev,
+                    dateOfBirth: "",
+                  }));
+                }
+              }}
             />
           </LocalizationProvider>
           <FormControl fullWidth size="small">
