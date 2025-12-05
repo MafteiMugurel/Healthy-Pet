@@ -19,10 +19,9 @@ const AddMedical = () => {
   const recordType = [
     { id: "vaccine", icon: "syringe" },
     { id: "consultation", icon: "document" },
-    { id: "blood work", icon: "drop" },
+    { id: "blood-work", icon: "drop" },
   ];
   const [formData, setFormData] = useState({
-    recordType: "",
     vaccineName: "",
     manufacturer: "",
     routeOfAdministration: "",
@@ -107,7 +106,7 @@ const AddMedical = () => {
           notes: formData.notes,
         };
         break;
-      case "blood work":
+      case "blood-work":
         data = {
           labClinicName: formData.labClinicName,
           resultsSummary: formData.resultsSummary,
@@ -121,7 +120,7 @@ const AddMedical = () => {
     return saveAnimalData(
       userData.uid || "",
       animalId as string,
-      formData.recordType,
+      selectedRecordType.id,
       data
     ).then(() => {
       console.log("Vaccine data saved successfully");
@@ -130,6 +129,7 @@ const AddMedical = () => {
   };
 
   const isSaveButtonDisabled = () => {
+    console.log("Validating form data for:", selectedRecordType.id);
     switch (selectedRecordType.id) {
       case "vaccine":
         return (
@@ -150,7 +150,7 @@ const AddMedical = () => {
           !formData.clinicName ||
           !formData.vetName
         );
-      case "blood work":
+      case "blood-work":
         return (
           !formData.labClinicName ||
           !formData.resultsSummary ||
@@ -386,7 +386,7 @@ const AddMedical = () => {
               />
             </>
           )}
-          {selectedRecordType.id === "blood work" && (
+          {selectedRecordType.id === "blood-work" && (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
