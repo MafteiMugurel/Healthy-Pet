@@ -14,6 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "./add-medical.scss";
 import { useAuth } from "../../context/AuthContext";
 import { saveAnimalData } from "../../services/firebaseService";
+import dayjs from "dayjs";
 
 const AddMedical = () => {
   const { userData } = useAuth();
@@ -34,7 +35,9 @@ const AddMedical = () => {
     nextDueDate: "", //Vaccine
     clinicName: "", //Vaccine   //Consultation
     vetName: "", //Vaccine   //Consultation
-    medicationsPrescribed: "", //Consultation
+    medicationsPrescribed: [
+      { name: "", dosage: "", frequency: "", duration: "" },
+    ], //Consultation
     treatmentPlan: "", //Consultation
     diagnosis: "", //Consultation
     symptoms: "", //Consultation
@@ -54,7 +57,7 @@ const AddMedical = () => {
   const [tempError, setTempError] = useState("");
 
   const handleTemperatureChange = (e: { target: { value: string } }) => {
-    let rawValue = e.target.value;
+    const rawValue = e.target.value;
 
     if (rawValue === "") {
       setFormData((prev) => ({
@@ -64,25 +67,23 @@ const AddMedical = () => {
       setTempError("");
       return;
     }
-
     const numericPattern = /^[0-9]*[.,]?[0-9]*$/;
 
     if (!numericPattern.test(rawValue)) {
       return;
     }
-
     const normalized = rawValue.replace(",", ".");
-
-    setFormData((prev) => ({
-      ...prev,
-      temperature: normalized,
-    }));
 
     const num = Number(normalized);
 
     if (Number.isNaN(num)) {
       return;
     }
+
+    setFormData((prev) => ({
+      ...prev,
+      temperature: normalized,
+    }));
 
     if (num < 20 || num > 45) {
       // I searched on the internet and it didnt help, we can modify later if needed
@@ -94,14 +95,45 @@ const AddMedical = () => {
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
-    console.log(name, " - ", value);
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+  };
 
-    console.log(formData);
+  const handleMedicationChange = (
+    index: number,
+    field: "name" | "dosage" | "frequency" | "duration",
+    value: string
+  ) => {
+    setFormData((prev) => {
+      const updated = [...prev.medicationsPrescribed];
+      updated[index] = {
+        ...updated[index],
+        [field]: value,
+      };
+      return { ...prev, medicationsPrescribed: updated };
+    });
+  };
+
+  const addMedicationRow = () => {
+    setFormData((prev) => ({
+      ...prev,
+      medicationsPrescribed: [
+        ...prev.medicationsPrescribed,
+        { name: "", dosage: "", frequency: "", duration: "" },
+      ],
+    }));
+  };
+
+  const removeMedicationRow = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      medicationsPrescribed: prev.medicationsPrescribed.filter(
+        (_, i) => i !== index
+      ),
+    }));
   };
 
   const getAnimalIdFromUrl = (): string | undefined => {
@@ -117,11 +149,9 @@ const AddMedical = () => {
   const animalId = getAnimalIdFromUrl();
 
   const saveAndExit = () => {
-    console.log("Saving form data:", formData);
     let data = {};
 
     if (!userData?.uid || !animalId) {
-      console.error("User ID or Animal ID is missing");
       return;
     }
 
@@ -174,7 +204,6 @@ const AddMedical = () => {
       formData.recordType,
       data
     ).then(() => {
-      console.log("Vaccine data saved successfully");
       window.location.href = "/dashboard";
     });
   };
@@ -196,7 +225,6 @@ const AddMedical = () => {
           !formData.symptoms ||
           !formData.diagnosis ||
           !formData.treatmentPlan ||
-          !formData.medicationsPrescribed ||
           !formData.clinicName ||
           !formData.vetName
         );
@@ -221,11 +249,11 @@ const AddMedical = () => {
           {recordType.map((medical) => (
             <div key={medical.id} className="medical-option-wrapper">
               <div
-                onClick={() => {
+                onClick={() =>
                   handleChange({
                     target: { name: "recordType", value: medical.id },
-                  });
-                }}
+                  })
+                }
                 className={
                   "medical-option" +
                   (formData.recordType === medical.id
@@ -257,11 +285,16 @@ const AddMedical = () => {
                   label="Date administered"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  value={
+                    formData.dateAdministered
+                      ? dayjs(formData.dateAdministered)
+                      : null
+                  }
                   onChange={(value) => {
                     if (value) {
                       setFormData((prev) => ({
                         ...prev,
-                        dateAdministered: value.format("DD/MM/YYYY"),
+                        dateAdministered: value.format("DD-MM-YYYY"),
                       }));
                     } else {
                       setFormData((prev) => ({
@@ -277,11 +310,14 @@ const AddMedical = () => {
                   label="Next due date"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  value={
+                    formData.nextDueDate ? dayjs(formData.nextDueDate) : null
+                  }
                   onChange={(value) => {
                     if (value) {
                       setFormData((prev) => ({
                         ...prev,
-                        nextDueDate: value.format("DD/MM/YYYY"),
+                        nextDueDate: value.format("DD-MM-YYYY"),
                       }));
                     } else {
                       setFormData((prev) => ({
@@ -370,11 +406,16 @@ const AddMedical = () => {
                   label="Date of consultation"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  value={
+                    formData.consultationDate
+                      ? dayjs(formData.consultationDate)
+                      : null
+                  }
                   onChange={(value) => {
                     if (value) {
                       setFormData((prev) => ({
                         ...prev,
-                        consultationDate: value.format("DD/MM/YYYY"),
+                        consultationDate: value.format("YYYY-MM-DD"),
                       }));
                     } else {
                       setFormData((prev) => ({
@@ -413,15 +454,68 @@ const AddMedical = () => {
                 value={formData.treatmentPlan}
               />
               {/* TODO this should be a table with Name Dosage Frequency Duration */}
-              <TextField
-                required
-                label="Medications prescribed"
-                fullWidth
-                size="small"
-                onChange={handleChange}
-                name="medicationsPrescribed"
-                value={formData.medicationsPrescribed}
-              />
+              <div className="medications-table">
+                {formData.medicationsPrescribed.map((med, index) => (
+                  <div key={index} className="medication-row">
+                    <TextField
+                      label="Name"
+                      size="small"
+                      value={med.name}
+                      onChange={(e) =>
+                        handleMedicationChange(index, "name", e.target.value)
+                      }
+                    />
+                    <TextField
+                      label="Dosage"
+                      size="small"
+                      value={med.dosage}
+                      onChange={(e) =>
+                        handleMedicationChange(index, "dosage", e.target.value)
+                      }
+                    />
+                    <TextField
+                      label="Frequency"
+                      size="small"
+                      value={med.frequency}
+                      onChange={(e) =>
+                        handleMedicationChange(
+                          index,
+                          "frequency",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <TextField
+                      label="Duration"
+                      size="small"
+                      value={med.duration}
+                      onChange={(e) =>
+                        handleMedicationChange(
+                          index,
+                          "duration",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => removeMedicationRow(index)}
+                      className="remove-medication-btn"
+                    >
+                      X
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={addMedicationRow}
+                  className="add-medication-btn"
+                >
+                  Add medication
+                </Button>
+              </div>
               <TextField
                 required
                 label="Clinic name"
@@ -476,11 +570,14 @@ const AddMedical = () => {
                   label="Follow-up date"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  value={
+                    formData.followUpDate ? dayjs(formData.followUpDate) : null
+                  }
                   onChange={(value) => {
                     if (value) {
                       setFormData((prev) => ({
                         ...prev,
-                        followUpDate: value.format("DD/MM/YYYY"),
+                        followUpDate: value.format("DD-MM-YYYY"),
                       }));
                     } else {
                       setFormData((prev) => ({
@@ -508,11 +605,16 @@ const AddMedical = () => {
                   label="Date of blood work"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  value={
+                    formData.bloodWorkDate
+                      ? dayjs(formData.bloodWorkDate)
+                      : null
+                  }
                   onChange={(value) => {
                     if (value) {
                       setFormData((prev) => ({
                         ...prev,
-                        bloodWorkDate: value.format("DD/MM/YYYY"),
+                        bloodWorkDate: value.format("DD-MM-YYYY"),
                       }));
                     } else {
                       setFormData((prev) => ({
