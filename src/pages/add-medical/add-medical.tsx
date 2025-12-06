@@ -52,8 +52,9 @@ const AddMedical = () => {
   });
 
   const [tempError, setTempError] = useState("");
+
   const handleTemperatureChange = (e: { target: { value: string } }) => {
-    const rawValue = e.target.value;
+    let rawValue = e.target.value;
 
     if (rawValue === "") {
       setFormData((prev) => ({
@@ -63,18 +64,26 @@ const AddMedical = () => {
       setTempError("");
       return;
     }
+
     const numericPattern = /^[0-9]*[.,]?[0-9]*$/;
 
     if (!numericPattern.test(rawValue)) {
       return;
     }
+
     const normalized = rawValue.replace(",", ".");
+
+    setFormData((prev) => ({
+      ...prev,
+      temperature: normalized,
+    }));
 
     const num = Number(normalized);
 
     if (Number.isNaN(num)) {
       return;
     }
+
     if (num < 20 || num > 45) {
       // I searched on the internet and it didnt help, we can modify later if needed
       setTempError("Temperature must be between 20°C and 45°C");
@@ -94,14 +103,6 @@ const AddMedical = () => {
 
     console.log(formData);
   };
-  const handleDateChange = (fieldName: string) => (date: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [fieldName]: date ? date.format("DD/MM/YYYY") : " ",
-    }));
-  };
-
-  const [selectedRecordType, setSelectedRecordType] = useState({} as any);
 
   const getAnimalIdFromUrl = (): string | undefined => {
     try {
@@ -124,7 +125,7 @@ const AddMedical = () => {
       return;
     }
 
-    switch (selectedRecordType.id) {
+    switch (formData.recordType) {
       case "vaccine":
         data = {
           vaccineName: formData.vaccineName,
@@ -179,7 +180,7 @@ const AddMedical = () => {
   };
 
   const isSaveButtonDisabled = () => {
-    switch (selectedRecordType.id) {
+    switch (formData.recordType) {
       case "vaccine":
         return (
           !formData.vaccineName ||
@@ -220,11 +221,14 @@ const AddMedical = () => {
           {recordType.map((medical) => (
             <div key={medical.id} className="medical-option-wrapper">
               <div
-                key={medical.id}
-                onClick={() => setSelectedRecordType(medical)}
+                onClick={() => {
+                  handleChange({
+                    target: { name: "recordType", value: medical.id },
+                  });
+                }}
                 className={
                   "medical-option" +
-                  (selectedRecordType.id === medical.id
+                  (formData.recordType === medical.id
                     ? " medical-option__selected"
                     : "")
                 }
@@ -237,7 +241,7 @@ const AddMedical = () => {
         </div>
 
         <form className="add-medical-container__medical-form">
-          {selectedRecordType.id === "vaccine" && (
+          {formData.recordType === "vaccine" && (
             <>
               <TextField
                 required
@@ -248,17 +252,44 @@ const AddMedical = () => {
                 name="vaccineName"
                 value={formData.vaccineName}
               />
-              {/* TODO how tf are dates working with forms? */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date administered"
+                  format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        dateAdministered: value.format("DD/MM/YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        dateAdministered: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Next due date"
+                  format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        nextDueDate: value.format("DD/MM/YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        nextDueDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
               <TextField
@@ -332,12 +363,26 @@ const AddMedical = () => {
               />
             </>
           )}
-          {selectedRecordType.id === "consultation" && (
+          {formData.recordType === "consultation" && (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date of consultation"
+                  format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        consultationDate: value.format("DD/MM/YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        consultationDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
               <TextField
@@ -429,7 +474,21 @@ const AddMedical = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Follow-up date"
+                  format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        followUpDate: value.format("DD/MM/YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        followUpDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
               <TextField
@@ -442,12 +501,26 @@ const AddMedical = () => {
               />
             </>
           )}
-          {selectedRecordType.id === "blood work" && (
+          {formData.recordType === "blood work" && (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date of blood work"
+                  format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        bloodWorkDate: value.format("DD/MM/YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        bloodWorkDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
               <TextField
