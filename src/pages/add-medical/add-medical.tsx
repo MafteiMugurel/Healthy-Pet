@@ -3,6 +3,7 @@ import SVGIcon from "../../components/svg-icon/svg-icon";
 import {
   Button,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -22,27 +23,65 @@ const AddMedical = () => {
     { id: "blood-work", icon: "drop" },
   ];
   const [formData, setFormData] = useState({
-    vaccineName: "",
-    manufacturer: "",
-    routeOfAdministration: "",
-    dose: "",
-    batchNumber: "",
-    clinicName: "",
-    vetName: "",
-    sideEffectsObserved: "",
-    medicationsPrescribed: "",
-    treatmentPlan: "",
-    diagnosis: "",
-    symptoms: "",
-    notes: "",
-    weight: "",
-    temperature: "",
-    heartRate: "",
-    medicationAtTimeOfBloodWork: "",
-    labClinicName: "",
-    resultsSummary: "",
-    vetInterpretation: "",
+    recordType: "",
+    vaccineName: "", //Vaccine
+    manufacturer: "", //Vaccine
+    routeOfAdministration: "", //Vaccine
+    dose: "", //Vaccine
+    batchNumber: "", //Vaccine
+    sideEffectsObserved: "", //Vaccine
+    dateAdministered: "", //Vaccine
+    nextDueDate: "", //Vaccine
+    clinicName: "", //Vaccine   //Consultation
+    vetName: "", //Vaccine   //Consultation
+    medicationsPrescribed: "", //Consultation
+    treatmentPlan: "", //Consultation
+    diagnosis: "", //Consultation
+    symptoms: "", //Consultation
+    weight: "", //Consultation
+    temperature: "", //Consultation
+    heartRate: "", //Consultation
+    consultationDate: "", //Consultation
+    followUpDate: "", //Consultation
+    notes: "", //Consultation   //Blood
+    medicationAtTimeOfBloodWork: "", //Blood
+    labClinicName: "", //Blood
+    resultsSummary: "", //Blood
+    vetInterpretation: "", //Blood
+    bloodWorkDate: "", //Blood
   });
+
+  const [tempError, setTempError] = useState("");
+  const handleTemperatureChange = (e: { target: { value: string } }) => {
+    const rawValue = e.target.value;
+
+    if (rawValue === "") {
+      setFormData((prev) => ({
+        ...prev,
+        temperature: "",
+      }));
+      setTempError("");
+      return;
+    }
+    const numericPattern = /^[0-9]*[.,]?[0-9]*$/;
+
+    if (!numericPattern.test(rawValue)) {
+      return;
+    }
+    const normalized = rawValue.replace(",", ".");
+
+    const num = Number(normalized);
+
+    if (Number.isNaN(num)) {
+      return;
+    }
+    if (num < 20 || num > 45) {
+      // I searched on the internet and it didnt help, we can modify later if needed
+      setTempError("Temperature must be between 20°C and 45°C");
+    } else {
+      setTempError("");
+    }
+  };
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -90,6 +129,8 @@ const AddMedical = () => {
           clinicName: formData.clinicName,
           vetName: formData.vetName,
           sideEffectsObserved: formData.sideEffectsObserved,
+          dateAdministrated: formData.dateAdministered,
+          nextDueDate: formData.nextDueDate,
         };
         break;
       case "consultation":
@@ -104,6 +145,8 @@ const AddMedical = () => {
           temperature: formData.temperature,
           heartRate: formData.heartRate,
           notes: formData.notes,
+          consultationDate: formData.consultationDate,
+          followUp: formData.followUpDate,
         };
         break;
       case "blood-work":
@@ -113,6 +156,7 @@ const AddMedical = () => {
           vetInterpretation: formData.vetInterpretation,
           medicationAtTimeOfBloodWork: formData.medicationAtTimeOfBloodWork,
           notes: formData.notes,
+          bloodWorkDate: formData.bloodWorkDate,
         };
         break;
     }
@@ -355,12 +399,21 @@ const AddMedical = () => {
                 value={formData.weight}
               />
               <TextField
-                label="Temperature"
+                label="Temperature (°C)"
                 fullWidth
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">°C</InputAdornment>
+                    ),
+                  },
+                }}
                 size="small"
-                onChange={handleChange}
+                onChange={handleTemperatureChange}
                 name="temperature"
-                value={formData.temperature}
+                value={formData.temperature} //I DONT UNDERSTAND WHY IT DOESN'T WORK
+                error={!!tempError}
+                helperText={tempError}
               />
               <TextField
                 label="Heart rate"
