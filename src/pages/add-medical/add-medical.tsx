@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 
 const AddMedical = () => {
   const { userData } = useAuth();
+
   const recordType = [
     { id: "vaccine", icon: "syringe" },
     { id: "consultation", icon: "document" },
@@ -27,6 +28,7 @@ const AddMedical = () => {
   const [formData, setFormData] = useState({
     recordType: "",
     vaccineName: "",
+    //Vaccine
     manufacturer: "",
     routeOfAdministration: "",
     dose: "",
@@ -35,13 +37,18 @@ const AddMedical = () => {
     dateAdministered: "",
     nextDueDate: "",
     clinicName: "",
+    //Vaccine
+
+    //Consultation
     vetName: "",
-    medicationsPrescribed: [] as {
-      name: string;
-      dosage: string;
-      frequency: string;
-      duration: string;
-    }[],
+    medicationsPrescribed: [
+      {
+        name: "",
+        dosage: "",
+        frequency: "",
+        duration: "",
+      },
+    ],
     treatmentPlan: "",
     diagnosis: "",
     symptoms: "",
@@ -51,41 +58,61 @@ const AddMedical = () => {
     consultationDate: "",
     followUpDate: "",
     notes: "",
+    //Consultation
+
+    //Blood
     medicationAtTimeOfBloodWork: "",
     labClinicName: "",
     resultsSummary: "",
     vetInterpretation: "",
     bloodWorkDate: "",
-    bloodTests: [] as {
-      testName: string;
-      result: string;
-      referenceRange: string;
-      flag: string;
-    }[],
+    //Blood
   });
 
   const [tempError, setTempError] = useState("");
 
   const handleTemperatureChange = (e: { target: { value: string } }) => {
     const rawValue = e.target.value;
+
     if (rawValue === "") {
-      setFormData((prev) => ({ ...prev, temperature: "" }));
+      setFormData((prev) => ({
+        ...prev,
+        temperature: "",
+      }));
       setTempError("");
       return;
     }
-    const pattern = /^[0-9]*[.,]?[0-9]*$/;
-    if (!pattern.test(rawValue)) return;
+
+    const numericPattern = /^[0-9]*[.,]?[0-9]*$/;
+    if (!numericPattern.test(rawValue)) {
+      return;
+    }
+
     const normalized = rawValue.replace(",", ".");
     const num = Number(normalized);
-    if (Number.isNaN(num)) return;
-    setFormData((prev) => ({ ...prev, temperature: normalized }));
-    if (num < 20 || num > 45)
+    if (Number.isNaN(num)) {
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      temperature: normalized,
+    }));
+
+    if (num < 20 || num > 45) {
+      // I searched on the internet and it didnt help, we can modify later if needed
       setTempError("Temperature must be between 20°C and 45°C");
-    else setTempError("");
+    } else {
+      setTempError("");
+    }
   };
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleMedicationChange = (
@@ -119,39 +146,11 @@ const AddMedical = () => {
     }));
   };
 
-  const handleBloodTestChange = (
-    index: number,
-    field: "testName" | "result" | "referenceRange" | "flag",
-    value: string
-  ) => {
-    setFormData((prev) => {
-      const updated = [...prev.bloodTests];
-      updated[index] = { ...updated[index], [field]: value };
-      return { ...prev, bloodTests: updated };
-    });
-  };
-
-  const addBloodTestRow = () => {
-    setFormData((prev) => ({
-      ...prev,
-      bloodTests: [
-        ...prev.bloodTests,
-        { testName: "", result: "", referenceRange: "", flag: "" },
-      ],
-    }));
-  };
-
-  const removeBloodTestRow = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      bloodTests: prev.bloodTests.filter((_, i) => i !== index),
-    }));
-  };
-
-  const getAnimalIdFromUrl = () => {
+  const getAnimalIdFromUrl = (): string | undefined => {
     try {
       const params = new URLSearchParams(window.location.search);
       if (params.has("animalId")) return params.get("animalId") || undefined;
+
       const parts = window.location.pathname.split("/").filter(Boolean);
       return parts.length ? parts[parts.length - 1] : undefined;
     } catch {
@@ -162,90 +161,96 @@ const AddMedical = () => {
   const animalId = getAnimalIdFromUrl();
 
   const saveAndExit = () => {
-    if (!userData?.uid || !animalId) return;
+    let data = {};
 
-    let data: any = {};
-
-    if (formData.recordType === "vaccine") {
-      data = {
-        vaccineName: formData.vaccineName,
-        manufacturer: formData.manufacturer,
-        routeOfAdministration: formData.routeOfAdministration,
-        dose: formData.dose,
-        batchNumber: formData.batchNumber,
-        clinicName: formData.clinicName,
-        vetName: formData.vetName,
-        sideEffectsObserved: formData.sideEffectsObserved,
-        dateAdministrated: formData.dateAdministered,
-        nextDueDate: formData.nextDueDate,
-      };
+    if (!userData?.uid || !animalId) {
+      return;
     }
 
-    if (formData.recordType === "consultation") {
-      data = {
-        symptoms: formData.symptoms,
-        diagnosis: formData.diagnosis,
-        treatmentPlan: formData.treatmentPlan,
-        medicationsPrescribed: formData.medicationsPrescribed,
-        clinicName: formData.clinicName,
-        vetName: formData.vetName,
-        weight: formData.weight,
-        temperature: formData.temperature,
-        heartRate: formData.heartRate,
-        notes: formData.notes,
-        consultationDate: formData.consultationDate,
-        followUp: formData.followUpDate,
-      };
+    switch (formData.recordType) {
+      case "vaccine":
+        data = {
+          vaccineName: formData.vaccineName,
+          manufacturer: formData.manufacturer,
+          routeOfAdministration: formData.routeOfAdministration,
+          dose: formData.dose,
+          batchNumber: formData.batchNumber,
+          clinicName: formData.clinicName,
+          vetName: formData.vetName,
+          sideEffectsObserved: formData.sideEffectsObserved,
+          dateAdministrated: formData.dateAdministered,
+          nextDueDate: formData.nextDueDate,
+        };
+        break;
+
+      case "consultation":
+        data = {
+          symptoms: formData.symptoms,
+          diagnosis: formData.diagnosis,
+          treatmentPlan: formData.treatmentPlan,
+          medicationsPrescribed: formData.medicationsPrescribed,
+          clinicName: formData.clinicName,
+          vetName: formData.vetName,
+          weight: formData.weight,
+          temperature: formData.temperature,
+          heartRate: formData.heartRate,
+          notes: formData.notes,
+          consultationDate: formData.consultationDate,
+          followUp: formData.followUpDate,
+        };
+        break;
+
+      case "blood work":
+        data = {
+          labClinicName: formData.labClinicName,
+          resultsSummary: formData.resultsSummary,
+          vetInterpretation: formData.vetInterpretation,
+          medicationAtTimeOfBloodWork: formData.medicationAtTimeOfBloodWork,
+          notes: formData.notes,
+          bloodWorkDate: formData.bloodWorkDate,
+        };
+        break;
     }
 
-    if (formData.recordType === "blood work") {
-      data = {
-        labClinicName: formData.labClinicName,
-        resultsSummary: formData.resultsSummary,
-        vetInterpretation: formData.vetInterpretation,
-        medicationAtTimeOfBloodWork: formData.medicationAtTimeOfBloodWork,
-        notes: formData.notes,
-        bloodWorkDate: formData.bloodWorkDate,
-        bloodTests: formData.bloodTests,
-      };
-    }
-
-    saveAnimalData(userData.uid, animalId, formData.recordType, data).then(
-      () => {
-        window.location.href = "/dashboard";
-      }
-    );
+    return saveAnimalData(
+      userData.uid || "",
+      animalId as string,
+      formData.recordType,
+      data
+    ).then(() => {
+      window.location.href = "/dashboard";
+    });
   };
 
   const isSaveButtonDisabled = () => {
-    if (formData.recordType === "vaccine")
-      return (
-        !formData.vaccineName ||
-        !formData.manufacturer ||
-        !formData.batchNumber ||
-        !formData.clinicName ||
-        !formData.vetName ||
-        !formData.dose ||
-        !formData.routeOfAdministration
-      );
-
-    if (formData.recordType === "consultation")
-      return (
-        !formData.symptoms ||
-        !formData.diagnosis ||
-        !formData.treatmentPlan ||
-        !formData.clinicName ||
-        !formData.vetName
-      );
-
-    if (formData.recordType === "blood work")
-      return (
-        !formData.labClinicName ||
-        !formData.resultsSummary ||
-        !formData.vetInterpretation
-      );
-
-    return true;
+    switch (formData.recordType) {
+      case "vaccine":
+        return (
+          !formData.vaccineName ||
+          !formData.manufacturer ||
+          !formData.batchNumber ||
+          !formData.clinicName ||
+          !formData.vetName ||
+          !formData.dose ||
+          !formData.routeOfAdministration
+        );
+      case "consultation":
+        return (
+          !formData.symptoms ||
+          !formData.diagnosis ||
+          !formData.treatmentPlan ||
+          !formData.clinicName ||
+          !formData.vetName
+        );
+      case "blood work":
+        return (
+          !formData.labClinicName ||
+          !formData.resultsSummary ||
+          !formData.vetInterpretation
+        );
+      default:
+        return true;
+    }
   };
 
   return (
@@ -281,14 +286,15 @@ const AddMedical = () => {
           {formData.recordType === "vaccine" && (
             <>
               <TextField
-                label="Vaccine name"
                 required
+                label="Vaccine name"
                 fullWidth
                 size="small"
-                name="vaccineName"
                 onChange={handleChange}
+                name="vaccineName"
                 value={formData.vaccineName}
               />
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date administered"
@@ -299,12 +305,19 @@ const AddMedical = () => {
                       ? dayjs(formData.dateAdministered)
                       : null
                   }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      dateAdministered: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        dateAdministered: value.format("DD-MM-YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        dateAdministered: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
@@ -316,66 +329,80 @@ const AddMedical = () => {
                   value={
                     formData.nextDueDate ? dayjs(formData.nextDueDate) : null
                   }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      nextDueDate: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        nextDueDate: value.format("DD-MM-YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        nextDueDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
               <TextField
-                label="Manufacturer"
                 required
+                label="Manufacturer"
                 fullWidth
                 size="small"
-                name="manufacturer"
                 onChange={handleChange}
+                name="manufacturer"
                 value={formData.manufacturer}
               />
+
               <TextField
-                label="Batch number"
                 required
+                label="Batch number"
                 fullWidth
                 size="small"
-                name="batchNumber"
                 onChange={handleChange}
+                name="batchNumber"
                 value={formData.batchNumber}
               />
+
               <TextField
-                label="Clinic name"
                 required
+                label="Clinic name"
                 fullWidth
                 size="small"
-                name="clinicName"
                 onChange={handleChange}
+                name="clinicName"
                 value={formData.clinicName}
               />
+
               <TextField
-                label="Administered by (vet name)"
                 required
+                label="Administred by (vet name)"
                 fullWidth
                 size="small"
-                name="vetName"
                 onChange={handleChange}
+                name="vetName"
                 value={formData.vetName}
               />
+
               <TextField
-                label="Dose"
                 required
+                label="Dose"
                 fullWidth
                 size="small"
-                name="dose"
                 onChange={handleChange}
+                name="dose"
                 value={formData.dose}
               />
 
               <FormControl fullWidth size="small">
                 <InputLabel>Route of administration</InputLabel>
                 <Select
-                  name="routeOfAdministration"
                   value={formData.routeOfAdministration}
+                  label="Age"
+                  name="routeOfAdministration"
+                  fullWidth
+                  size="small"
                   onChange={handleChange}
                 >
                   <MenuItem value="subcutaneous">Subcutaneous (SC)</MenuItem>
@@ -389,8 +416,8 @@ const AddMedical = () => {
                 label="Side effects observed"
                 fullWidth
                 size="small"
-                name="sideEffectsObserved"
                 onChange={handleChange}
+                name="sideEffectsObserved"
                 value={formData.sideEffectsObserved}
               />
             </>
@@ -408,65 +435,78 @@ const AddMedical = () => {
                       ? dayjs(formData.consultationDate)
                       : null
                   }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      consultationDate: v ? v.format("YYYY-MM-DD") : "",
-                    }))
-                  }
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        consultationDate: value.format("YYYY-MM-DD"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        consultationDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
               <TextField
-                label="Reason for visit / Symptoms"
                 required
+                label="Reason for visit / Symptoms"
                 fullWidth
                 size="small"
-                name="symptoms"
                 onChange={handleChange}
+                name="symptoms"
                 value={formData.symptoms}
               />
+
               <TextField
-                label="Diagnosis"
                 required
+                label="Diagnosis"
                 fullWidth
                 size="small"
-                name="diagnosis"
                 onChange={handleChange}
+                name="diagnosis"
                 value={formData.diagnosis}
               />
+
               <TextField
-                label="Treatment plan"
                 required
+                label="Treatment plan"
                 fullWidth
                 size="small"
-                name="treatmentPlan"
                 onChange={handleChange}
+                name="treatmentPlan"
                 value={formData.treatmentPlan}
               />
+
+              {/* TODO this should be a table with Name Dosage Frequency Duration */}
 
               <div className="medications-table">
                 {formData.medicationsPrescribed.map((med, index) => (
                   <div key={index} className="medication-row">
                     <TextField
-                      size="small"
                       label="Name"
+                      size="small"
                       value={med.name}
                       onChange={(e) =>
                         handleMedicationChange(index, "name", e.target.value)
                       }
                     />
+
                     <TextField
-                      size="small"
                       label="Dosage"
+                      size="small"
                       value={med.dosage}
                       onChange={(e) =>
                         handleMedicationChange(index, "dosage", e.target.value)
                       }
                     />
+
                     <TextField
-                      size="small"
                       label="Frequency"
+                      size="small"
                       value={med.frequency}
                       onChange={(e) =>
                         handleMedicationChange(
@@ -476,9 +516,10 @@ const AddMedical = () => {
                         )
                       }
                     />
+
                     <TextField
-                      size="small"
                       label="Duration"
+                      size="small"
                       value={med.duration}
                       onChange={(e) =>
                         handleMedicationChange(
@@ -511,54 +552,56 @@ const AddMedical = () => {
               </div>
 
               <TextField
-                label="Clinic name"
                 required
+                label="Clinic name"
                 fullWidth
                 size="small"
-                name="clinicName"
                 onChange={handleChange}
+                name="clinicName"
                 value={formData.clinicName}
               />
+
               <TextField
-                label="Administered by (vet name)"
                 required
+                label="Administred by (vet name)"
                 fullWidth
                 size="small"
-                name="vetName"
                 onChange={handleChange}
+                name="vetName"
                 value={formData.vetName}
               />
+
               <TextField
                 label="Weight"
                 fullWidth
                 size="small"
-                name="weight"
                 onChange={handleChange}
+                name="weight"
                 value={formData.weight}
               />
 
               <TextField
                 label="Temperature (°C)"
                 fullWidth
-                size="small"
-                name="temperature"
-                value={formData.temperature}
-                onChange={handleTemperatureChange}
-                error={!!tempError}
-                helperText={tempError}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">°C</InputAdornment>
                   ),
                 }}
+                size="small"
+                onChange={handleTemperatureChange}
+                name="temperature"
+                value={formData.temperature}
+                error={!!tempError}
+                helperText={tempError}
               />
 
               <TextField
                 label="Heart rate"
                 fullWidth
                 size="small"
-                name="heartRate"
                 onChange={handleChange}
+                name="heartRate"
                 value={formData.heartRate}
               />
 
@@ -570,12 +613,19 @@ const AddMedical = () => {
                   value={
                     formData.followUpDate ? dayjs(formData.followUpDate) : null
                   }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      followUpDate: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        followUpDate: value.format("DD-MM-YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        followUpDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
@@ -583,8 +633,8 @@ const AddMedical = () => {
                 label="Notes"
                 fullWidth
                 size="small"
-                name="notes"
                 onChange={handleChange}
+                name="notes"
                 value={formData.notes}
               />
             </>
@@ -602,118 +652,69 @@ const AddMedical = () => {
                       ? dayjs(formData.bloodWorkDate)
                       : null
                   }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      bloodWorkDate: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  onChange={(value) => {
+                    if (value) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        bloodWorkDate: value.format("DD-MM-YYYY"),
+                      }));
+                    } else {
+                      setFormData((prev) => ({
+                        ...prev,
+                        bloodWorkDate: "",
+                      }));
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
               <TextField
-                label="Lab/Clinic name"
                 required
+                label="Lab/Clinic name"
                 fullWidth
                 size="small"
-                name="labClinicName"
                 onChange={handleChange}
+                name="labClinicName"
                 value={formData.labClinicName}
               />
 
-              <div className="blood-tests-table">
-                {formData.bloodTests.map((test, index) => (
-                  <div key={index} className="blood-test-row">
-                    <TextField
-                      size="small"
-                      label="Test name"
-                      value={test.testName}
-                      onChange={(e) =>
-                        handleBloodTestChange(index, "testName", e.target.value)
-                      }
-                    />
-                    <TextField
-                      size="small"
-                      label="Result"
-                      value={test.result}
-                      onChange={(e) =>
-                        handleBloodTestChange(index, "result", e.target.value)
-                      }
-                    />
-                    <TextField
-                      size="small"
-                      label="Reference range"
-                      value={test.referenceRange}
-                      onChange={(e) =>
-                        handleBloodTestChange(
-                          index,
-                          "referenceRange",
-                          e.target.value
-                        )
-                      }
-                    />
-                    <TextField
-                      size="small"
-                      label="Flag"
-                      value={test.flag}
-                      onChange={(e) =>
-                        handleBloodTestChange(index, "flag", e.target.value)
-                      }
-                    />
-
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => removeBloodTestRow(index)}
-                      className="remove-blood-test-btn"
-                    >
-                      X
-                    </Button>
-                  </div>
-                ))}
-
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={addBloodTestRow}
-                  className="add-blood-test-btn"
-                >
-                  Add test
-                </Button>
-              </div>
+              {/* TODO this should be a table with Test name, Result, Reference range and flag if abnormal */}
 
               <TextField
-                label="Results summary"
                 required
+                label="Results summary"
                 fullWidth
                 size="small"
-                name="resultsSummary"
                 onChange={handleChange}
+                name="resultsSummary"
                 value={formData.resultsSummary}
               />
+
               <TextField
-                label="Vet interpretation"
                 required
+                label="Vet interpretation"
                 fullWidth
                 size="small"
-                name="vetInterpretation"
                 onChange={handleChange}
+                name="vetInterpretation"
                 value={formData.vetInterpretation}
               />
+
               <TextField
                 label="Medication at the time of blood work"
                 fullWidth
                 size="small"
-                name="medicationAtTimeOfBloodWork"
                 onChange={handleChange}
+                name="medicationAtTimeOfBloodWork"
                 value={formData.medicationAtTimeOfBloodWork}
               />
+
               <TextField
                 label="Notes"
                 fullWidth
                 size="small"
-                name="notes"
                 onChange={handleChange}
+                name="notes"
                 value={formData.notes}
               />
             </>

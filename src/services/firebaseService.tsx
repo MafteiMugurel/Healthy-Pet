@@ -58,6 +58,7 @@ export const saveAnimalData = async (
   type: string,
   data: any
 ) => {
+  console.log("Saving animal data:", { uid, animalId, type, data });
   try {
     const animalRef = ref(db, `users/${uid}/animals/${animalId}/${type}`);
     await push(animalRef, data);

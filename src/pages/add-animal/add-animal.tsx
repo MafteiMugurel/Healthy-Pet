@@ -13,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
-import { push, ref, set } from "firebase/database";
+import { push, ref } from "firebase/database";
 import { db } from "../../services/firebase";
 import { useAuth } from "../../context/AuthContext";
 import dayjs from "dayjs";
