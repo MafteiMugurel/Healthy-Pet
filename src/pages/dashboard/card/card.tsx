@@ -49,6 +49,10 @@ const Card = ({ data }: { data: Animal }) => {
     window.location.href = "/add-medical/" + animalId;
   };
 
+  const redirectToViewAnimal = (animalId: string) => {
+    window.location.href = "/view-animal/" + animalId;
+  };
+
   return (
     <div className="card-container">
       <div className="card-container__header">
@@ -81,7 +85,12 @@ const Card = ({ data }: { data: Animal }) => {
       </div>
 
       <div className="card-container__actions">
-        <Button variant="contained">View</Button>
+        <Button
+          variant="contained"
+          onClick={() => redirectToViewAnimal(data.id)}
+        >
+          View
+        </Button>
         <Button
           variant="contained"
           color="success"

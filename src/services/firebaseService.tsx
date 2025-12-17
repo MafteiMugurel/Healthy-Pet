@@ -68,3 +68,18 @@ export const saveAnimalData = async (
     throw err;
   }
 };
+
+export const fetchAnimalById = async (uid: string, animalId: string) => {
+  try {
+    const animalRef = ref(db, `users/${uid}/animals/${animalId}`);
+    const snapshot = await get(animalRef);
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.error("Error fetching animal by ID:", err);
+    throw err;
+  }
+};

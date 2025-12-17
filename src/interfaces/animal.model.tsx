@@ -14,4 +14,7 @@ export interface Animal {
   breed: string;
   species: string;
   gender: string;
+  weight: string;
+  coloring: string;
+  microchipId: string;
 }
