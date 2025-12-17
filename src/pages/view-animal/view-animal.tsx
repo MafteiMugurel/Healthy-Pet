@@ -4,7 +4,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Tabs,
   TextField,
+  Tab,
 } from "@mui/material";
 import "./view-animal.scss";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -18,6 +20,12 @@ import { useAuth } from "../../context/AuthContext";
 import { Animal } from "../../interfaces/animal.model";
 import { fetchAnimalById } from "../../services/firebaseService";
 import dayjs from "dayjs";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
 const ViewAnimal = () => {
   const getAnimalIdFromUrl = (): string | undefined => {
@@ -39,6 +47,7 @@ const ViewAnimal = () => {
     const loadProfile = async () => {
       if (userData?.uid && animalId) {
         const data = await fetchAnimalById(userData.uid, animalId);
+        console.log("Fetched animal data: ", data);
         setAnimal(data);
       }
     };
@@ -72,6 +81,22 @@ const ViewAnimal = () => {
         throw error;
       }
     })();
+  };
+
+  function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index } = props;
+
+    return (
+      <div role="tabpanel" hidden={value !== index}>
+        {value === index && <>{children}</>}
+      </div>
+    );
+  }
+
+  const [value, setValue] = useState(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
   };
 
   return (
@@ -155,6 +180,22 @@ const ViewAnimal = () => {
           />
         </form>
       </div>
+
+      <Tabs value={value} onChange={handleTabChange}>
+        <Tab label="Consultations" />
+        <Tab label="Lab Results" />
+        <Tab label="Vaccinations" />
+      </Tabs>
+      <CustomTabPanel value={value} index={0}>
+        ergsergse
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        sergreg
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        Item Three
+      </CustomTabPanel>
+
       <div className="add-animal-actions">
         <Button variant="contained" onClick={handleAddMedical}>
           add medical records
