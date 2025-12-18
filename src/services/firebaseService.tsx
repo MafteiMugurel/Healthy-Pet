@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "./firebase";
-import { DatabaseReference, get, push, ref, set } from "firebase/database";
+import { get, push, ref, set } from "firebase/database";
 
 export const logIn = async (email: string, password: string) => {
   try {
@@ -49,6 +49,16 @@ export const fetchAnimals = async (uid: string) => {
   }
 };
 
+export const saveAnimal = async (uid: string, formData: any) => {
+  try {
+    const usersRef = ref(db, `users/${uid}/animals`);
+    const snapshot = await push(usersRef, formData);
+    return snapshot;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const saveAnimalData = async (
   uid: string,
   animalId: string,
@@ -78,6 +88,13 @@ export const fetchAnimalById = async (uid: string, animalId: string) => {
     throw err;
   }
 };
-function add(userRef: DatabaseReference, arg1: { name: string }) {
-  throw new Error("Function not implemented.");
-}
+
+export const removeAnimal = async (uid: string, animalId: string) => {
+  try {
+    const animalRef = ref(db, `users/${uid}/animals/${animalId}`);
+    await set(animalRef, null);
+  } catch (err) {
+    console.error("Error removing animal:", err);
+    throw err;
+  }
+};

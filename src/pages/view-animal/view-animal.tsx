@@ -26,7 +26,7 @@ import {
   Consultation,
   Vaccine,
 } from "../../interfaces/animal.model";
-import { fetchAnimalById } from "../../services/firebaseService";
+import { fetchAnimalById, removeAnimal } from "../../services/firebaseService";
 import dayjs from "dayjs";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -113,6 +113,13 @@ const ViewAnimal = () => {
         throw error;
       }
     })();
+  };
+
+  const handleRemoveAnimal = () => {
+    if (!userData?.uid) return;
+
+    removeAnimal(userData.uid, animalId!);
+    window.location.href = "/dashboard";
   };
 
   function CustomTabPanel(props: TabPanelProps) {
@@ -364,6 +371,10 @@ const ViewAnimal = () => {
       <div className="add-animal-actions">
         <Button variant="contained" onClick={handleAddMedical}>
           add medical records
+        </Button>
+        or
+        <Button variant="contained" color="error" onClick={handleRemoveAnimal}>
+          remove animal
         </Button>
       </div>
     </div>

@@ -13,10 +13,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useState } from "react";
 import SVGIcon from "../../components/svg-icon/svg-icon";
-import { push, ref } from "firebase/database";
-import { db } from "../../services/firebase";
 import { useAuth } from "../../context/AuthContext";
 import dayjs from "dayjs";
+import { saveAnimal } from "../../services/firebaseService";
 
 const AddAnimal = () => {
   const { userData } = useAuth();
@@ -51,27 +50,19 @@ const AddAnimal = () => {
   };
 
   const handleAddMedical = () => {
-    handleSubmitData().then((newUserRef) => {
+    if (!userData?.uid) return;
+
+    saveAnimal(userData.uid, formData).then((newUserRef) => {
       window.location.href = `/add-medical/${newUserRef.key}`;
     });
   };
 
   const handleSaveAndExit = () => {
-    handleSubmitData().then(() => {
+    if (!userData?.uid) return;
+
+    saveAnimal(userData.uid, formData).then(() => {
       window.location.href = "/dashboard";
     });
-  };
-
-  const handleSubmitData = () => {
-    return (async () => {
-      try {
-        const usersRef = ref(db, `users/${userData?.uid}/animals`);
-        const newUserRef = await push(usersRef, formData);
-        return newUserRef;
-      } catch (error) {
-        throw error;
-      }
-    })();
   };
 
   return (
