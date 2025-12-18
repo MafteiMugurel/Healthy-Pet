@@ -15,6 +15,7 @@ import "./add-medical.scss";
 import { useAuth } from "../../context/AuthContext";
 import { saveAnimalData } from "../../services/firebaseService";
 import dayjs from "dayjs";
+import { BloodTest, Medication } from "../../interfaces/animal.model";
 
 const AddMedical = () => {
   const { userData } = useAuth();
@@ -36,12 +37,7 @@ const AddMedical = () => {
     nextDueDate: "",
     clinicName: "",
     vetName: "",
-    medicationsPrescribed: [] as {
-      name: string;
-      dosage: string;
-      frequency: string;
-      duration: string;
-    }[],
+    medicationsPrescribed: [] as Medication[],
     treatmentPlan: "",
     diagnosis: "",
     symptoms: "",
@@ -56,12 +52,7 @@ const AddMedical = () => {
     resultsSummary: "",
     vetInterpretation: "",
     bloodWorkDate: "",
-    bloodTests: [] as {
-      testName: string;
-      result: string;
-      referenceRange: string;
-      flag: string;
-    }[],
+    bloodTests: [] as BloodTest[],
   });
 
   const [tempError, setTempError] = useState("");
@@ -212,7 +203,7 @@ const AddMedical = () => {
 
     saveAnimalData(userData.uid, animalId, formData.recordType, data).then(
       () => {
-        window.location.href = "/dashboard";
+        window.location.href = "/view-animal/" + animalId;
       }
     );
   };

@@ -108,21 +108,21 @@ const ViewAnimal = () => {
             fullWidth
             size="small"
             onChange={handleChange}
-            value={animal.name}
+            value={animal.name ?? ""}
             name="name"
           />
           <TextField
             label="Breed"
             size="small"
             onChange={handleChange}
-            value={animal.breed}
+            value={animal.breed ?? ""}
             name="breed"
           />
           <TextField
             label="Species"
             size="small"
             onChange={handleChange}
-            value={animal.species}
+            value={animal.species ?? ""}
             name="species"
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -130,7 +130,7 @@ const ViewAnimal = () => {
               label="Date of blood work"
               format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
-              value={dayjs(animal.dateOfBirth)}
+              value={dayjs(animal.dateOfBirth) ?? ""}
               name="dateOfBirth"
               onChange={(value) => {
                 handleChange({
@@ -147,7 +147,7 @@ const ViewAnimal = () => {
             <Select
               label="Gender"
               onChange={handleChange}
-              value={animal.gender}
+              value={animal.gender ?? ""}
               name="gender"
             >
               <MenuItem value="male">Male</MenuItem>
@@ -158,14 +158,14 @@ const ViewAnimal = () => {
             label="Weight"
             size="small"
             onChange={handleChange}
-            value={animal.weight}
+            value={animal.weight ?? ""}
             name="weight"
           />
           <TextField
             label="Coloring"
             size="small"
             onChange={handleChange}
-            value={animal.coloring}
+            value={animal.coloring ?? ""}
             name="coloring"
           />
           <TextField
@@ -173,10 +173,16 @@ const ViewAnimal = () => {
             className="full-width"
             size="small"
             onChange={handleChange}
-            value={animal.microchipId}
+            value={animal.microchipId ?? ""}
             name="microchipId"
           />
         </form>
+      </div>
+
+      <div className="add-animal-actions">
+        <Button variant="contained" color="success" onClick={handleSaveData}>
+          update animal info
+        </Button>
       </div>
 
       <Tabs value={value} onChange={handleTabChange}>
@@ -197,9 +203,6 @@ const ViewAnimal = () => {
       <div className="add-animal-actions">
         <Button variant="contained" onClick={handleAddMedical}>
           add medical records
-        </Button>
-        <Button variant="contained" color="success" onClick={handleSaveData}>
-          update animal info
         </Button>
       </div>
     </div>

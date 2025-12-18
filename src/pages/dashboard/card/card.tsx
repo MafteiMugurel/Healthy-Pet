@@ -18,15 +18,6 @@ const Card = ({ data }: { data: Animal }) => {
     return age;
   };
 
-  const formatDate = () => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return new Date(data.latestVetVisit).toLocaleDateString(undefined, options);
-  };
-
   const overdueRemindersCount = () => {
     return (
       data.reminders.filter((reminder) => {
@@ -72,7 +63,7 @@ const Card = ({ data }: { data: Animal }) => {
         </div>
         <div className="card-container__info__item">
           <SVGIcon type="calendar" />
-          {formatDate()}
+          {data.latestVetVisit ? data.latestVetVisit : "No visits yet"}
         </div>
         <div className="card-container__info__item">
           <SVGIcon type="bell" />
