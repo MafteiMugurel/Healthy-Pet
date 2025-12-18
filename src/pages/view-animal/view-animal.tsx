@@ -229,7 +229,46 @@ const ViewAnimal = () => {
 
       {animal.consultation && animal.consultation.length > 0 && (
         <CustomTabPanel value={value} index={0}>
-          ergsergse
+          {animal.consultation.map((consultationRecord, index) => (
+            <Accordion key={index}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h4>{consultationRecord.consultationDate}</h4>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p>Symptoms: {consultationRecord.symptoms}</p>
+                <p>Diagnosis: {consultationRecord.diagnosis}</p>
+                <p>Treatment Plan: {consultationRecord.treatmentPlan}</p>
+                <div>
+                  <h5>Medications Prescribed:</h5>
+                  <table>
+                    <tr>
+                      <th>Name</th>
+                      <th>Dosage</th>
+                      <th>Frequency</th>
+                      <th>Duration</th>
+                    </tr>
+                    {consultationRecord.medicationsPrescribed.map(
+                      (medication, medIndex) => (
+                        <tr key={medIndex}>
+                          <td>{medication.name}</td>
+                          <td>{medication.dosage}</td>
+                          <td>{medication.frequency}</td>
+                          <td>{medication.duration}</td>
+                        </tr>
+                      )
+                    )}
+                  </table>
+                </div>
+                <p>Clinic Name: {consultationRecord.clinicName}</p>
+                <p>Vet Name: {consultationRecord.vetName}</p>
+                <p>Weight: {consultationRecord.weight}</p>
+                <p>Temperature: {consultationRecord.temperature}</p>
+                <p>Heart Rate: {consultationRecord.heartRate}</p>
+                <p>Notes: {consultationRecord.notes}</p>
+                <p>Follow Up: {consultationRecord.followUp}</p>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </CustomTabPanel>
       )}
 
@@ -241,7 +280,42 @@ const ViewAnimal = () => {
 
       {animal.bloodWork && animal.bloodWork.length > 0 && (
         <CustomTabPanel value={value} index={1}>
-          sergreg
+          {animal.bloodWork.map((bloodWorkRecord, index) => (
+            <Accordion key={index}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h4>{bloodWorkRecord.bloodWorkDate}</h4>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p>Lab/Clinic Name: {bloodWorkRecord.labClinicName}</p>
+                <p>Results Summary: {bloodWorkRecord.resultsSummary}</p>
+                <p>Vet Interpretation: {bloodWorkRecord.vetInterpretation}</p>
+                <p>
+                  Medication at Time of Blood Work:{" "}
+                  {bloodWorkRecord.medicationAtTimeOfBloodWork}
+                </p>
+                <p>Notes: {bloodWorkRecord.notes}</p>
+                <div>
+                  <h5>Blood Tests:</h5>
+                  <table>
+                    <tr>
+                      <th>Test Name</th>
+                      <th>Result</th>
+                      <th>Reference Range</th>
+                      <th>Flag</th>
+                    </tr>
+                    {bloodWorkRecord.bloodTests.map((test, testIndex) => (
+                      <tr key={testIndex}>
+                        <td>{test.testName}</td>
+                        <td>{test.result}</td>
+                        <td>{test.referenceRange}</td>
+                        <td>{test.flag}</td>
+                      </tr>
+                    ))}
+                  </table>
+                </div>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </CustomTabPanel>
       )}
 
@@ -253,22 +327,31 @@ const ViewAnimal = () => {
 
       {animal.vaccine && animal.vaccine.length > 0 && (
         <CustomTabPanel value={value} index={2}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <h4>Vaccine Name - Date Administrated</h4>
-            </AccordionSummary>
-            <AccordionDetails>
-              <p>Manufacturer: </p>
-              <p>Route of Administration: </p>
-              <p>Dose: </p>
-              <p>Batch Number: </p>
-              <p>Clinic Name: </p>
-              <p>Vet Name: </p>
-              <p>Side Effects Observed: </p>
-              <p>Date Administrated: </p>
-              <p>Next Due Date: </p>
-            </AccordionDetails>
-          </Accordion>
+          {animal.vaccine.map((vaccineRecord, index) => (
+            <Accordion key={index}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h4>
+                  {vaccineRecord.vaccineName} -{" "}
+                  {vaccineRecord.dateAdministrated}
+                </h4>
+              </AccordionSummary>
+              <AccordionDetails>
+                <p>Manufacturer: {vaccineRecord.manufacturer}</p>
+                <p>
+                  Route of Administration: {vaccineRecord.routeOfAdministration}
+                </p>
+                <p>Dose: {vaccineRecord.dose}</p>
+                <p>Batch Number: {vaccineRecord.batchNumber}</p>
+                <p>Clinic Name: {vaccineRecord.clinicName}</p>
+                <p>Vet Name: {vaccineRecord.vetName}</p>
+                <p>
+                  Side Effects Observed: {vaccineRecord.sideEffectsObserved}
+                </p>
+                <p>Date Administrated: {vaccineRecord.dateAdministrated}</p>
+                <p>Next Due Date: {vaccineRecord.nextDueDate}</p>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </CustomTabPanel>
       )}
 
