@@ -51,7 +51,7 @@ const Homepage = () => {
         values.password as string,
         values.name as string
       )
-        .then((response) => {
+        .then(() => {
           navigate("/dashboard", { replace: true });
           handleClose();
         })
@@ -61,7 +61,7 @@ const Homepage = () => {
         });
     } else {
       logIn(values.email as string, values.password as string)
-        .then((response) => {
+        .then(() => {
           navigate("/dashboard", { replace: true });
           handleClose();
         })

@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "./firebase";
-import { get, push, ref } from "firebase/database";
+import { DatabaseReference, get, push, ref, set } from "firebase/database";
 
 export const logIn = async (email: string, password: string) => {
   try {
@@ -27,7 +27,7 @@ export const signUp = async (email: string, password: string, name: string) => {
 const saveNewUserData = async (uid: string, name: string) => {
   try {
     const userRef = ref(db, `users/${uid}`);
-    await push(userRef, { name });
+    set(userRef, { name });
   } catch (err) {
     console.error("Error saving user data:", err);
     throw err;
@@ -78,3 +78,6 @@ export const fetchAnimalById = async (uid: string, animalId: string) => {
     throw err;
   }
 };
+function add(userRef: DatabaseReference, arg1: { name: string }) {
+  throw new Error("Function not implemented.");
+}
