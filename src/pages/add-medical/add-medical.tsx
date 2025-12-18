@@ -294,17 +294,16 @@ const AddMedical = () => {
                   label="Date administered"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
-                  value={
-                    formData.dateAdministered
-                      ? dayjs(formData.dateAdministered)
-                      : null
-                  }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      dateAdministered: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  value={dayjs(formData.dateAdministered)}
+                  name="dateAdministered"
+                  onChange={(value) => {
+                    handleChange({
+                      target: {
+                        name: "dateAdministered",
+                        value: value?.format("DD/MM/YYYY"),
+                      },
+                    });
+                  }}
                 />
               </LocalizationProvider>
 
@@ -313,15 +312,16 @@ const AddMedical = () => {
                   label="Next due date"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
-                  value={
-                    formData.nextDueDate ? dayjs(formData.nextDueDate) : null
-                  }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      nextDueDate: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  value={dayjs(formData.nextDueDate)}
+                  name="nextDueDate"
+                  onChange={(value) => {
+                    handleChange({
+                      target: {
+                        name: "nextDueDate",
+                        value: value?.format("DD/MM/YYYY"),
+                      },
+                    });
+                  }}
                 />
               </LocalizationProvider>
 
@@ -403,17 +403,16 @@ const AddMedical = () => {
                   label="Date of consultation"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
-                  value={
-                    formData.consultationDate
-                      ? dayjs(formData.consultationDate)
-                      : null
-                  }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      consultationDate: v ? v.format("YYYY-MM-DD") : "",
-                    }))
-                  }
+                  value={dayjs(formData.consultationDate)}
+                  name="consultationDate"
+                  onChange={(value) => {
+                    handleChange({
+                      target: {
+                        name: "consultationDate",
+                        value: value?.format("DD/MM/YYYY"),
+                      },
+                    });
+                  }}
                 />
               </LocalizationProvider>
 
@@ -567,15 +566,16 @@ const AddMedical = () => {
                   label="Follow-up date"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
-                  value={
-                    formData.followUpDate ? dayjs(formData.followUpDate) : null
-                  }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      followUpDate: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  value={dayjs(formData.followUpDate)}
+                  name="followUpDate"
+                  onChange={(value) => {
+                    handleChange({
+                      target: {
+                        name: "followUpDate",
+                        value: value?.format("DD/MM/YYYY"),
+                      },
+                    });
+                  }}
                 />
               </LocalizationProvider>
 
@@ -597,17 +597,16 @@ const AddMedical = () => {
                   label="Date of blood work"
                   format="DD/MM/YYYY"
                   slotProps={{ textField: { size: "small" } }}
-                  value={
-                    formData.bloodWorkDate
-                      ? dayjs(formData.bloodWorkDate)
-                      : null
-                  }
-                  onChange={(v) =>
-                    setFormData((p) => ({
-                      ...p,
-                      bloodWorkDate: v ? v.format("DD-MM-YYYY") : "",
-                    }))
-                  }
+                  value={dayjs(formData.bloodWorkDate)}
+                  name="bloodWorkDate"
+                  onChange={(value) => {
+                    handleChange({
+                      target: {
+                        name: "bloodWorkDate",
+                        value: value?.format("DD/MM/YYYY"),
+                      },
+                    });
+                  }}
                 />
               </LocalizationProvider>
 

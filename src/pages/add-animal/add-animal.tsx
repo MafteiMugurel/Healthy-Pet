@@ -43,14 +43,11 @@ const AddAnimal = () => {
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
-    console.log(name, " - ", value);
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-
-    console.log(formData);
   };
 
   const handleAddMedical = () => {
@@ -137,20 +134,15 @@ const AddAnimal = () => {
               label="Birth date"
               format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
-              value={formData.dateOfBirth ? dayjs(formData.dateOfBirth) : null}
+              value={dayjs(formData.dateOfBirth)}
               name="dateOfBirth"
               onChange={(value) => {
-                if (value) {
-                  setFormData((prev) => ({
-                    ...prev,
-                    dateOfBirth: value.format("YYYY-MM-DD"),
-                  }));
-                } else {
-                  setFormData((prev) => ({
-                    ...prev,
-                    dateOfBirth: "",
-                  }));
-                }
+                handleChange({
+                  target: {
+                    name: "dateOfBirth",
+                    value: value?.format("DD/MM/YYYY"),
+                  },
+                });
               }}
             />
           </LocalizationProvider>

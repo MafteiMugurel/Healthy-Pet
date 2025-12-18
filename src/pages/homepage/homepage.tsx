@@ -40,10 +40,8 @@ const Homepage = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const values = Object.fromEntries(data.entries());
-    console.log(values);
 
     if (dialogOpen === "register") {
-      console.log("Registering user:", values);
       if (values.password !== values.repeatPassword) {
         alert("Passwords do not match!");
         return;
@@ -54,7 +52,6 @@ const Homepage = () => {
         values.name as string
       )
         .then((response) => {
-          console.log("Registration successful:", response);
           navigate("/dashboard", { replace: true });
           handleClose();
         })
@@ -63,10 +60,8 @@ const Homepage = () => {
           return;
         });
     } else {
-      console.log("Logging in user:", values);
       logIn(values.email as string, values.password as string)
         .then((response) => {
-          console.log("Login successful:", response);
           navigate("/dashboard", { replace: true });
           handleClose();
         })

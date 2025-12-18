@@ -47,7 +47,6 @@ const ViewAnimal = () => {
     const loadProfile = async () => {
       if (userData?.uid && animalId) {
         const data = await fetchAnimalById(userData.uid, animalId);
-        console.log("Fetched animal data: ", data);
         setAnimal(data);
       }
     };
@@ -57,14 +56,11 @@ const ViewAnimal = () => {
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
-    console.log(name, " - ", value);
 
     setAnimal((prev) => ({
       ...prev,
       [name]: value,
     }));
-
-    console.log(animal);
   };
 
   const handleAddMedical = () => {
@@ -129,19 +125,21 @@ const ViewAnimal = () => {
             value={animal.species}
             name="species"
           />
-          {/* TODO */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label="Date of Birth"
+              label="Date of blood work"
               format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
-              value={animal.dateOfBirth ? dayjs(animal.dateOfBirth) : null}
-              onChange={(v) =>
-                setAnimal((p) => ({
-                  ...p,
-                  dateOfBirth: v ? v.format("DD-MM-YYYY") : "",
-                }))
-              }
+              value={dayjs(animal.dateOfBirth)}
+              name="dateOfBirth"
+              onChange={(value) => {
+                handleChange({
+                  target: {
+                    name: "dateOfBirth",
+                    value: value?.format("DD/MM/YYYY"),
+                  },
+                });
+              }}
             />
           </LocalizationProvider>
           <FormControl fullWidth size="small">
