@@ -11,7 +11,7 @@ export interface BloodTest {
   flag: string;
 }
 
-interface BloodWork {
+export interface BloodWork {
   labClinicName: string;
   resultsSummary: string;
   vetInterpretation: string;
@@ -21,7 +21,7 @@ interface BloodWork {
   bloodTests: BloodTest[];
 }
 
-interface Vaccine {
+export interface Vaccine {
   vaccineName: string;
   manufacturer: string;
   routeOfAdministration: string;
@@ -41,7 +41,7 @@ export interface Medication {
   duration: string;
 }
 
-interface Consultation {
+export interface Consultation {
   symptoms: string;
   diagnosis: string;
   treatmentPlan: string;
@@ -70,6 +70,6 @@ export interface Animal {
   coloring: string;
   microchipId: string;
   bloodWork: BloodWork[];
-  vaccines: Vaccine[];
-  consultations: Consultation[];
+  vaccine: Vaccine[];
+  consultation: Consultation[];
 }

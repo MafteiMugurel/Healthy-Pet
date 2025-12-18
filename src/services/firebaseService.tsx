@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "./firebase";
-import { DatabaseReference, get, ref, set } from "firebase/database";
+import { DatabaseReference, get, push, ref, set } from "firebase/database";
 
 export const logIn = async (email: string, password: string) => {
   try {
@@ -57,7 +57,7 @@ export const saveAnimalData = async (
 ) => {
   try {
     const animalRef = ref(db, `users/${uid}/animals/${animalId}/${type}`);
-    await set(animalRef, data);
+    await push(animalRef, data);
   } catch (err) {
     console.error("Error saving animal data:", err);
     throw err;

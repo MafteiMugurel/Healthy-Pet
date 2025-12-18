@@ -8,7 +8,7 @@
     font-size: 32px;
     font-weight: bold;
     color: var(--primary-color);
-    padding-bottom: 20px;
+    padding-bottom: 40px;
   }
 
   &__animal-form {
@@ -27,5 +27,9 @@
     justify-content: flex-end;
     align-items: center;
     gap: 8px;
+  }
+
+  div[role="tabPanel"] {
+    width: 100%;
   }
 }

@@ -22,7 +22,7 @@ const AddMedical = () => {
   const recordType = [
     { id: "vaccine", icon: "syringe" },
     { id: "consultation", icon: "document" },
-    { id: "blood work", icon: "drop" },
+    { id: "bloodWork", icon: "drop" },
   ];
 
   const [formData, setFormData] = useState({
@@ -189,7 +189,7 @@ const AddMedical = () => {
       };
     }
 
-    if (formData.recordType === "blood work") {
+    if (formData.recordType === "bloodWork") {
       data = {
         labClinicName: formData.labClinicName,
         resultsSummary: formData.resultsSummary,
@@ -229,7 +229,7 @@ const AddMedical = () => {
         !formData.vetName
       );
 
-    if (formData.recordType === "blood work")
+    if (formData.recordType === "bloodWork")
       return (
         !formData.labClinicName ||
         !formData.resultsSummary ||
@@ -581,7 +581,7 @@ const AddMedical = () => {
             </>
           )}
 
-          {formData.recordType === "blood work" && (
+          {formData.recordType === "bloodWork" && (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker

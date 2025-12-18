@@ -7,6 +7,9 @@ import {
   Tabs,
   TextField,
   Tab,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from "@mui/material";
 import "./view-animal.scss";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -17,9 +20,15 @@ import { useEffect, useState } from "react";
 import { push, ref } from "firebase/database";
 import { db } from "../../services/firebase";
 import { useAuth } from "../../context/AuthContext";
-import { Animal } from "../../interfaces/animal.model";
+import {
+  Animal,
+  BloodWork,
+  Consultation,
+  Vaccine,
+} from "../../interfaces/animal.model";
 import { fetchAnimalById } from "../../services/firebaseService";
 import dayjs from "dayjs";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,7 +56,34 @@ const ViewAnimal = () => {
     const loadProfile = async () => {
       if (userData?.uid && animalId) {
         const data = await fetchAnimalById(userData.uid, animalId);
-        setAnimal(data);
+        const vaccineArray = [] as Vaccine[];
+        Object.keys(data.vaccine || {}).forEach((key) =>
+          vaccineArray.push({
+            ...data.vaccine[key],
+            key,
+          })
+        );
+        const consultationArray = [] as Consultation[];
+        Object.keys(data.consultation || {}).forEach((key) =>
+          consultationArray.push({
+            ...data.consultation[key],
+            key,
+          })
+        );
+        const bloodWorkArray = [] as BloodWork[];
+        Object.keys(data.bloodWork || {}).forEach((key) =>
+          bloodWorkArray.push({
+            ...data.bloodWork[key],
+            key,
+          })
+        );
+
+        setAnimal({
+          ...data,
+          vaccine: vaccineArray,
+          consultation: consultationArray,
+          bloodWork: bloodWorkArray,
+        });
       }
     };
 
@@ -127,7 +163,7 @@ const ViewAnimal = () => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label="Date of blood work"
+              label="Birth date"
               format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
               value={dayjs(animal.dateOfBirth) ?? ""}
@@ -190,15 +226,57 @@ const ViewAnimal = () => {
         <Tab label="Lab Results" />
         <Tab label="Vaccinations" />
       </Tabs>
-      <CustomTabPanel value={value} index={0}>
-        ergsergse
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        sergreg
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel>
+
+      {animal.consultation && animal.consultation.length > 0 && (
+        <CustomTabPanel value={value} index={0}>
+          ergsergse
+        </CustomTabPanel>
+      )}
+
+      {animal.consultation && animal.consultation.length <= 0 && (
+        <CustomTabPanel value={value} index={0}>
+          No consultation records available.
+        </CustomTabPanel>
+      )}
+
+      {animal.bloodWork && animal.bloodWork.length > 0 && (
+        <CustomTabPanel value={value} index={1}>
+          sergreg
+        </CustomTabPanel>
+      )}
+
+      {animal.bloodWork && animal.bloodWork.length <= 0 && (
+        <CustomTabPanel value={value} index={1}>
+          No bloodWork records available.
+        </CustomTabPanel>
+      )}
+
+      {animal.vaccine && animal.vaccine.length > 0 && (
+        <CustomTabPanel value={value} index={2}>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <h4>Vaccine Name - Date Administrated</h4>
+            </AccordionSummary>
+            <AccordionDetails>
+              <p>Manufacturer: </p>
+              <p>Route of Administration: </p>
+              <p>Dose: </p>
+              <p>Batch Number: </p>
+              <p>Clinic Name: </p>
+              <p>Vet Name: </p>
+              <p>Side Effects Observed: </p>
+              <p>Date Administrated: </p>
+              <p>Next Due Date: </p>
+            </AccordionDetails>
+          </Accordion>
+        </CustomTabPanel>
+      )}
+
+      {animal.vaccine && animal.vaccine.length <= 0 && (
+        <CustomTabPanel value={value} index={2}>
+          No vaccine records available.
+        </CustomTabPanel>
+      )}
 
       <div className="add-animal-actions">
         <Button variant="contained" onClick={handleAddMedical}>
