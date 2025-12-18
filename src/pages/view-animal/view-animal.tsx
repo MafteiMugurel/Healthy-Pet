@@ -29,6 +29,7 @@ import {
 import { fetchAnimalById, removeAnimal } from "../../services/firebaseService";
 import dayjs from "dayjs";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LabelValue from "../../components/label-value/label-value";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -343,7 +344,10 @@ const ViewAnimal = () => {
                 </h4>
               </AccordionSummary>
               <AccordionDetails>
-                <p>Manufacturer: {vaccineRecord.manufacturer}</p>
+                <LabelValue
+                  label="Manufacturer"
+                  value={vaccineRecord.manufacturer}
+                />
                 <p>
                   Route of Administration: {vaccineRecord.routeOfAdministration}
                 </p>
