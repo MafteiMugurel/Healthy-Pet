@@ -1,6 +1,6 @@
 # HealthyPet Web Aplication
 
-A full-stack web application or managing pets and their medical records.
+A web application or managing pets and their medical records.
 The app allows users to add pets, view pet details, and manage medical information through a clean and modular React interface.
 
 ## Features
@@ -27,7 +27,6 @@ The app allows users to add pets, view pet details, and manage medical informati
 ### Frontend
 - **React**
 - **TypeScript**
-- **Vite**
 - **SCSS**
 - **Material UI**
 - **Day.js**
