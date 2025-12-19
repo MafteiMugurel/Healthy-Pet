@@ -10,6 +10,13 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import "./view-animal.scss";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -29,7 +36,6 @@ import {
 import { fetchAnimalById, removeAnimal } from "../../services/firebaseService";
 import dayjs from "dayjs";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LabelValue from "../../components/label-value/label-value";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,6 +58,13 @@ const ViewAnimal = () => {
 
   const { userData } = useAuth();
   const [animal, setAnimal] = useState<Animal>({} as Animal);
+  const [value, setValue] = useState(0);
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const handleAccordionChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -59,24 +72,15 @@ const ViewAnimal = () => {
         const data = await fetchAnimalById(userData.uid, animalId);
         const vaccineArray = [] as Vaccine[];
         Object.keys(data.vaccine || {}).forEach((key) =>
-          vaccineArray.push({
-            ...data.vaccine[key],
-            key,
-          })
+          vaccineArray.push({ ...data.vaccine[key], key })
         );
         const consultationArray = [] as Consultation[];
         Object.keys(data.consultation || {}).forEach((key) =>
-          consultationArray.push({
-            ...data.consultation[key],
-            key,
-          })
+          consultationArray.push({ ...data.consultation[key], key })
         );
         const bloodWorkArray = [] as BloodWork[];
         Object.keys(data.bloodWork || {}).forEach((key) =>
-          bloodWorkArray.push({
-            ...data.bloodWork[key],
-            key,
-          })
+          bloodWorkArray.push({ ...data.bloodWork[key], key })
         );
 
         setAnimal({
@@ -93,51 +97,52 @@ const ViewAnimal = () => {
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
-
-    setAnimal((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setAnimal((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddMedical = () => {
     window.location.href = `/add-medical/${animalId}`;
   };
 
-  const handleSaveData = () => {
-    return (async () => {
-      try {
-        const usersRef = ref(db, `users/${userData?.uid}/animals`);
-        const newUserRef = await push(usersRef, animal);
-        return newUserRef;
-      } catch (error) {
-        throw error;
-      }
-    })();
+  const handleSaveData = async () => {
+    try {
+      const usersRef = ref(db, `users/${userData?.uid}/animals`);
+      await push(usersRef, animal);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleRemoveAnimal = () => {
     if (!userData?.uid) return;
-
     removeAnimal(userData.uid, animalId!);
     window.location.href = "/dashboard";
   };
 
   function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index } = props;
-
     return (
-      <div role="tabpanel" hidden={value !== index}>
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        className="tab-panel-container"
+      >
         {value === index && <>{children}</>}
       </div>
     );
   }
 
-  const [value, setValue] = useState(0);
-
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    setExpanded(false);
   };
+
+  const DataRow = ({ label, value }: { label: string; value: any }) => (
+    <TableRow>
+      <TableCell className="label-cell">{label}</TableCell>
+      <TableCell>{value || "-"}</TableCell>
+    </TableRow>
+  );
 
   return (
     <div className="view-animal-container">
@@ -174,13 +179,16 @@ const ViewAnimal = () => {
               label="Birth date"
               format="DD/MM/YYYY"
               slotProps={{ textField: { size: "small" } }}
-              value={dayjs(animal.dateOfBirth) ?? ""}
-              name="dateOfBirth"
-              onChange={(value) => {
+              value={
+                animal.dateOfBirth
+                  ? dayjs(animal.dateOfBirth, "DD/MM/YYYY")
+                  : null
+              }
+              onChange={(newValue) => {
                 handleChange({
                   target: {
                     name: "dateOfBirth",
-                    value: value?.format("DD/MM/YYYY"),
+                    value: newValue?.format("DD/MM/YYYY"),
                   },
                 });
               }}
@@ -229,154 +237,122 @@ const ViewAnimal = () => {
         </Button>
       </div>
 
-      <Tabs value={value} onChange={handleTabChange}>
+      <Tabs
+        value={value}
+        onChange={handleTabChange}
+        className="view-animal-tabs"
+      >
         <Tab label="Consultations" />
         <Tab label="Lab Results" />
         <Tab label="Vaccinations" />
       </Tabs>
 
-      {animal.consultation && animal.consultation.length > 0 && (
-        <CustomTabPanel value={value} index={0}>
-          {animal.consultation.map((consultationRecord, index) => (
-            <Accordion key={index}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h4>{consultationRecord.consultationDate}</h4>
-              </AccordionSummary>
-              <AccordionDetails>
-                <p>Symptoms: {consultationRecord.symptoms}</p>
-                <p>Diagnosis: {consultationRecord.diagnosis}</p>
-                <p>Treatment Plan: {consultationRecord.treatmentPlan}</p>
-                <div>
-                  <h5>Medications Prescribed:</h5>
-                  <table>
-                    <tr>
-                      <th>Name</th>
-                      <th>Dosage</th>
-                      <th>Frequency</th>
-                      <th>Duration</th>
-                    </tr>
-                    {consultationRecord?.medicationsPrescribed?.map(
-                      (medication, medIndex) => (
-                        <tr key={medIndex}>
-                          <td>{medication.name}</td>
-                          <td>{medication.dosage}</td>
-                          <td>{medication.frequency}</td>
-                          <td>{medication.duration}</td>
-                        </tr>
-                      )
-                    )}
-                  </table>
-                </div>
-                <p>Clinic Name: {consultationRecord.clinicName}</p>
-                <p>Vet Name: {consultationRecord.vetName}</p>
-                <p>Weight: {consultationRecord.weight}</p>
-                <p>Temperature: {consultationRecord.temperature}</p>
-                <p>Heart Rate: {consultationRecord.heartRate}</p>
-                <p>Notes: {consultationRecord.notes}</p>
-                <p>Follow Up: {consultationRecord.followUp}</p>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </CustomTabPanel>
-      )}
+      <CustomTabPanel value={value} index={0}>
+        {animal.consultation?.map((record, idx) => (
+          <Accordion
+            key={idx}
+            expanded={expanded === `panel-c-${idx}`}
+            onChange={handleAccordionChange(`panel-c-${idx}`)}
+            className="view-animal-accordion"
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <span className="summary-title">
+                {record.consultationDate} -{" "}
+                {record.diagnosis || "General Checkup"}
+              </span>
+            </AccordionSummary>
+            <AccordionDetails className="accordion-details-content">
+              <TableContainer
+                component={Paper}
+                variant="outlined"
+                className="table-wrapper"
+              >
+                <Table size="small" className="data-table">
+                  <TableBody>
+                    <DataRow label="Symptoms" value={record.symptoms} />
+                    <DataRow label="Diagnosis" value={record.diagnosis} />
+                    <DataRow
+                      label="Treatment Plan"
+                      value={record.treatmentPlan}
+                    />
+                    <DataRow
+                      label="Clinic / Vet"
+                      value={`${record.clinicName} / ${record.vetName}`}
+                    />
+                    <DataRow
+                      label="Vitals"
+                      value={`Weight: ${record.weight}kg | Temp: ${record.temperature}°C | HR: ${record.heartRate}bpm`}
+                    />
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </CustomTabPanel>
 
-      {animal.consultation && animal.consultation.length <= 0 && (
-        <CustomTabPanel value={value} index={0}>
-          No consultation records available.
-        </CustomTabPanel>
-      )}
+      <CustomTabPanel value={value} index={1}>
+        {animal.bloodWork?.map((record, idx) => (
+          <Accordion
+            key={idx}
+            expanded={expanded === `panel-l-${idx}`}
+            onChange={handleAccordionChange(`panel-l-${idx}`)}
+            className="view-animal-accordion"
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <span className="summary-title">
+                {record.bloodWorkDate} - {record.labClinicName}
+              </span>
+            </AccordionSummary>
+            <AccordionDetails className="accordion-details-content">
+              <TableContainer component={Paper} variant="outlined">
+                <Table size="small" className="data-table">
+                  <TableBody>
+                    <DataRow label="Summary" value={record.resultsSummary} />
+                    <DataRow
+                      label="Interpretation"
+                      value={record.vetInterpretation}
+                    />
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </CustomTabPanel>
 
-      {animal.bloodWork && animal.bloodWork.length > 0 && (
-        <CustomTabPanel value={value} index={1}>
-          {animal.bloodWork.map((bloodWorkRecord, index) => (
-            <Accordion key={index}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h4>{bloodWorkRecord.bloodWorkDate}</h4>
-              </AccordionSummary>
-              <AccordionDetails>
-                <p>Lab/Clinic Name: {bloodWorkRecord.labClinicName}</p>
-                <p>Results Summary: {bloodWorkRecord.resultsSummary}</p>
-                <p>Vet Interpretation: {bloodWorkRecord.vetInterpretation}</p>
-                <p>
-                  Medication at Time of Blood Work:{" "}
-                  {bloodWorkRecord.medicationAtTimeOfBloodWork}
-                </p>
-                <p>Notes: {bloodWorkRecord.notes}</p>
-                <div>
-                  <h5>Blood Tests:</h5>
-                  <table>
-                    <tr>
-                      <th>Test Name</th>
-                      <th>Result</th>
-                      <th>Reference Range</th>
-                      <th>Flag</th>
-                    </tr>
-                    {bloodWorkRecord.bloodTests.map((test, testIndex) => (
-                      <tr key={testIndex}>
-                        <td>{test.testName}</td>
-                        <td>{test.result}</td>
-                        <td>{test.referenceRange}</td>
-                        <td>{test.flag}</td>
-                      </tr>
-                    ))}
-                  </table>
-                </div>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </CustomTabPanel>
-      )}
+      <CustomTabPanel value={value} index={2}>
+        {animal.vaccine?.map((record, idx) => (
+          <Accordion
+            key={idx}
+            expanded={expanded === `panel-v-${idx}`}
+            onChange={handleAccordionChange(`panel-v-${idx}`)}
+            className="view-animal-accordion"
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <span className="summary-title">
+                {record.vaccineName} - {record.dateAdministrated}
+              </span>
+            </AccordionSummary>
+            <AccordionDetails className="accordion-details-content">
+              <TableContainer component={Paper} variant="outlined">
+                <Table size="small" className="data-table">
+                  <TableBody>
+                    <DataRow label="Manufacturer" value={record.manufacturer} />
+                    <DataRow label="Next Due Date" value={record.nextDueDate} />
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </CustomTabPanel>
 
-      {animal.bloodWork && animal.bloodWork.length <= 0 && (
-        <CustomTabPanel value={value} index={1}>
-          No bloodWork records available.
-        </CustomTabPanel>
-      )}
-
-      {animal.vaccine && animal.vaccine.length > 0 && (
-        <CustomTabPanel value={value} index={2}>
-          {animal.vaccine.map((vaccineRecord, index) => (
-            <Accordion key={index}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h4>
-                  {vaccineRecord.vaccineName} -{" "}
-                  {vaccineRecord.dateAdministrated}
-                </h4>
-              </AccordionSummary>
-              <AccordionDetails>
-                <LabelValue
-                  label="Manufacturer"
-                  value={vaccineRecord.manufacturer}
-                />
-                <p>
-                  Route of Administration: {vaccineRecord.routeOfAdministration}
-                </p>
-                <p>Dose: {vaccineRecord.dose}</p>
-                <p>Batch Number: {vaccineRecord.batchNumber}</p>
-                <p>Clinic Name: {vaccineRecord.clinicName}</p>
-                <p>Vet Name: {vaccineRecord.vetName}</p>
-                <p>
-                  Side Effects Observed: {vaccineRecord.sideEffectsObserved}
-                </p>
-                <p>Date Administrated: {vaccineRecord.dateAdministrated}</p>
-                <p>Next Due Date: {vaccineRecord.nextDueDate}</p>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </CustomTabPanel>
-      )}
-
-      {animal.vaccine && animal.vaccine.length <= 0 && (
-        <CustomTabPanel value={value} index={2}>
-          No vaccine records available.
-        </CustomTabPanel>
-      )}
-
-      <div className="add-animal-actions">
+      <div className="add-animal-actions bottom-actions">
         <Button variant="contained" onClick={handleAddMedical}>
           add medical records
         </Button>
-        or
+        <span>or</span>
         <Button variant="contained" color="error" onClick={handleRemoveAnimal}>
           remove animal
         </Button>
