@@ -255,7 +255,7 @@ const ViewAnimal = () => {
                       <th>Frequency</th>
                       <th>Duration</th>
                     </tr>
-                    {consultationRecord.medicationsPrescribed.map(
+                    {consultationRecord?.medicationsPrescribed?.map(
                       (medication, medIndex) => (
                         <tr key={medIndex}>
                           <td>{medication.name}</td>
