@@ -1,46 +1,181 @@
-# Getting Started with Create React App
+# HealthyPet Web Aplication
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack web application or managing pets and their medical records.
+The app allows users to add pets, view pet details, and manage medical information through a clean and modular React interface.
+
+## Features
+
+- **Pet Management**
+  - Add new pets
+  - View pet details
+- **Medical Records**
+  - Add vaccinations
+  - Add consultations
+  - Add lab / blood work records
+- **Dashboard**
+  - Card-based layout
+  - Quick access to pet actions
+- **Modular UI**
+  - Page-based architecture
+  - Reusable components
+- **Clean Styling**
+  - Separate SCSS files
+  - No inline or TSX-based CSS
+
+## Tech Stack
+
+### Frontend
+- **React**
+- **TypeScript**
+- **Vite**
+- **SCSS**
+- **Material UI**
+- **Day.js**
+
+## Prerequisites
+
+Before running the project, make sure you have:
+
+- **Node.js** (v24 or higher)
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd healthy-pet
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### Start the Frontend Development Server
+
+From the `client` directory (in a new terminal):
+
+```bash
+npm start
+```
+
+The React app will start on `http://localhost:3000` and should automatically open in your browser.
+
+## Usage
+
+### 1. Create an Account
+
+- Navigate to `http://localhost:3000`
+- Click on "Register"
+- Enter your email and password
+- Click "Sign Up" to create your account
+
+### 2. Log In
+
+- Enter your credentials on the login page
+- Click "Login"
+- You'll be redirected to the dashboard upon successful authentication
+
+### 3. Create a Profile For Your Pet
+
+- On the dashboard, create a profile for your pet by clicking "Add new animal"
+- Insert your pet details:
+   - Animal type
+   - Animal name
+   - Breed
+   - Species
+   - Birthdate
+   - Gender
+   - Weight
+   - Coloring
+   - Microchip/ID number
+
+Then, you can Add medical records for your pet by clicking "ADD MEDICAL RECORDS" or you can add them later and just Save the details that you already put by clicking "SAVE AND EXIT"
+
+### 4. Add Medical Records
+
+After you finish to add yor pet, you can click "ADD DATA"  and choose which type of data you want to add for your pet like:
+ - Vaccine
+ - Consultation
+ - BloodWork
+
+After you finish, just click "SAVE AND EXIT"
+Later, you can update or delete datas from your pet profile by clicking "VIEW"
+
+### 5. View Pet
+
+By clicking "VIEW" you can update general or delete general information from your pet like:
+   - Animal name
+   - Breed
+   - Species
+   - Birthdate
+   - Gender
+   - Weight
+   - Coloring
+   - Microchip/ID number
+
+Also, you can see here details about next consultations, lab results and vaccinations for your pet
+## Project Structure
+
+```bash
+src/pages/  
+├─ add-animal/  
+│  ├─ add-animal.tsx  
+│  ├─ add-animal.scss  
+│  └─ add-medical/  
+│     ├─ add-medical.tsx  
+│     └─ add-medical.scss  
+│  
+├─ dashboard/  
+│  ├─ dashboard.tsx  
+│  ├─ dashboard.scss  
+│  ├─ card/  
+│  │  ├─ card.tsx  
+│  │  └─ card.scss  
+│  └─ card-add/  
+│     ├─ card-add.tsx  
+│     └─ card-add.scss  
+│  
+├─ homepage/  
+│  ├─ homepage.tsx  
+│  └─ homepage.scss  
+│  
+└─ view-animal/  
+   ├─ view-animal.tsx  
+   └─ view-animal.scss
+```
+
+Each page follows a consistent structure:
+- 1 TSX file for logic & layout
+- 1 SCSS file for styling
 
 ## Available Scripts
 
-In the project directory, you can run:
+npm run dev – start development server  
+npm run build – build for production  
+npm run preview – preview production build
 
-### `npm start`
+## License
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+See the LICENSE file for details.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Author
 
-### `npm test`
+Mugurel Maftei & Adi Istrate
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+
